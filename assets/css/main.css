@@ -17,6 +17,7 @@
   --light: #E6E7EB;
   --lighter: #F3F3F3;
   --blue: #0027FF;
+  --blue-2: rgba(0,0,255,0.64);
   --color: #D73A42;
   --color-rgb: 215,58,66;
   --text-color: #17181E;
@@ -175,7 +176,7 @@ a:focus {
 }
 
 .invert {
-  color: var(--dark);
+  color: var(--blue);
   text-decoration: none;
   -webkit-transition: all 0.24s ease-out;
   -o-transition: all 0.24s ease-out;
@@ -1446,7 +1447,7 @@ textarea {
 
 .readmore {
   display: inline-block;
-  color: var(--gray-2);
+  color: var(--blue-2);
   font-size: 0.8239746086rem;
   font-style: italic;
   text-decoration: underline;
@@ -1556,7 +1557,7 @@ textarea {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: gray-2;
+  color: blue-2;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1569,7 +1570,7 @@ textarea {
   font-weight: var(--font-weight-bold);
 }
 .feed__date {
-  color: var(--gray-2);
+  color: var(--blue-2);
   font-style: italic;
 }
 .feed__author + .feed__date {
