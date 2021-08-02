@@ -1,3 +1,2 @@
 User-agent: *
-Disallow:
-Sitemap: https://junelee220.github.io/sitemap.xml
+Disallow: /

@@ -16,14 +16,13 @@
   --gray-2: #747577;
   --light: #E6E7EB;
   --lighter: #F3F3F3;
-  --blue: #0027FF;
   --color: #D73A42;
   --color-rgb: 215,58,66;
-  --text-color: #FFFFFF;
-  --headings-color: #0027FF;
+  --text-color: #17181E;
+  --headings-color: #17181E;
   --logo-color: #FFFFFF;
   --hero-height: 80vh;
-  --hero-bg: #0027FF;
+  --hero-bg: #17181E;
   --hero-heading-color: #FFFFFF;
   --hero-text-color: rgba(255,255,255,0.75);
   --hero-link-color: #FFFFFF;
@@ -148,7 +147,7 @@ html.no-scroll {
 }
 
 body {
-  background: var(--blue);
+  background: var(--white);
   color: var(--text-color);
   font-family: var(--body-font);
   font-weight: var(--font-weight-normal);
@@ -2127,7 +2126,7 @@ textarea {
 
 /* Footer ------------------------ */
 .footer {
-  background: var(--blue);
+  background: var(--dark);
   font-family: var(--body-font);
   overflow: hidden;
   padding: calc(3.4rem + 1vw) var(--page-margin);
