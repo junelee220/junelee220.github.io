@@ -159,7 +159,7 @@ body {
 }
 
 a {
-  color: var(--color);
+  color: var(--blue);
   text-decoration: none;
   -webkit-transition: all 0.24s ease-out;
   -o-transition: all 0.24s ease-out;
@@ -443,7 +443,7 @@ table td {
 
 figcaption {
   clear: both;
-  color: gray-2;
+  color: blue-2;
   font-style: italic;
   font-size: 0.7241964329rem;
   margin: 0.85rem 0 0;
@@ -586,7 +586,7 @@ button + button {
 button:disabled {
   background-color: var(--light);
   border-color: var(--light);
-  color: var(--gray-2);
+  color: var(--blue-2);
   cursor: not-allowed;
 }
 
@@ -1664,7 +1664,7 @@ textarea {
   width: 100%;
 }
 .post__meta {
-  color: gray-2;
+  color: blue-2;
   font-size: 0.8239746086rem;
   font-style: italic;
   margin-bottom: calc(-1.4166666667rem - 1vw);
@@ -1700,7 +1700,7 @@ textarea {
   width: 4.5333333333rem;
 }
 .post__last-updated {
-  color: var(--gray-2);
+  color: var(--blue-2);
   font-size: 0.7724761953rem;
   font-style: italic;
   margin-top: 2.2666666667rem;
@@ -1847,7 +1847,7 @@ textarea {
   }
 }
 .post__nav-prev svg, .post__nav-next svg {
-  fill: var(--gray-2);
+  fill: var(--blue-2);
 }
 @media all and (max-width: 37.4375em) {
   .post__nav-prev svg, .post__nav-next svg {
@@ -1887,7 +1887,7 @@ textarea {
   }
 }
 .post__nav-link > span {
-  color: var(--gray-2);
+  color: var(--blue-2);
   display: block;
   font-size: 0.7724761953rem;
   font-family: var(--menu-font);
@@ -2124,7 +2124,7 @@ textarea {
   margin-left: 1.1333333333rem;
 }
 .pagination svg {
-  fill: var(--gray-2);
+  fill: var(--blue-2);
 }
 
 /* Footer ------------------------ */
