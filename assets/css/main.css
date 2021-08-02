@@ -19,11 +19,11 @@
   --blue: #0027FF;
   --color: #D73A42;
   --color-rgb: 215,58,66;
-  --text-color: #FFFFFF;
-  --headings-color: #0027FF;
+  --text-color: #17181E;
+  --headings-color: #17181E;
   --logo-color: #FFFFFF;
   --hero-height: 80vh;
-  --hero-bg: #0027FF;
+  --hero-bg: #17181E;
   --hero-heading-color: #FFFFFF;
   --hero-text-color: rgba(255,255,255,0.75);
   --hero-link-color: #FFFFFF;
@@ -148,7 +148,7 @@ html.no-scroll {
 }
 
 body {
-  background: var(--blue);
+  background: blue;
   color: var(--text-color);
   font-family: var(--body-font);
   font-weight: var(--font-weight-normal);
@@ -771,9 +771,9 @@ textarea {
   }
 }
 .top.is-visible {
-  background: var(--dark);
-  -webkit-box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.06);
-          box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.06);
+  background: blue !important;
+  -webkit-box-shadow: 0 3px 10px 0 rgba(0, 0, 255, 0.06);
+          box-shadow: 0 3px 10px 0 rgba(0, 0, 255, 0.06);
   opacity: 1;
   position: fixed;
   -webkit-transform: translate(0, 0);
@@ -1564,6 +1564,7 @@ textarea {
   margin-bottom: calc(-1.4166666667rem - 1vw);
 }
 .feed__author {
+  color: blue;
   font-family: var(--menu-font);
   font-weight: var(--font-weight-bold);
 }
@@ -2127,7 +2128,7 @@ textarea {
 
 /* Footer ------------------------ */
 .footer {
-  background: var(--blue);
+  background: blue;
   font-family: var(--body-font);
   overflow: hidden;
   padding: calc(3.4rem + 1vw) var(--page-margin);
