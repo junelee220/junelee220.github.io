@@ -41,6 +41,7 @@ jobs:
       - name: Apply plugin patches
         run: |
           cp patches/folder-page_PageList.tsx .quartz/plugins/folder-page/src/components/PageList.tsx
+          cp patches/folder-page_FolderContent.tsx .quartz/plugins/folder-page/src/components/FolderContent.tsx
           cp patches/explorer_Explorer.tsx .quartz/plugins/explorer/src/components/Explorer.tsx
           cd .quartz/plugins/folder-page && npm install --no-audit --no-fund && npm run build && cd ../../..
           cd .quartz/plugins/explorer && npm install --no-audit --no-fund && npm run build && cd ../../..
