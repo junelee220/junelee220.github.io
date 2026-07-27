@@ -151,11 +151,11 @@ plugins:
     enabled: true
   - source: github:quartz-community/content-page
     enabled: true
-  - source: github:quartz-community/folder-page
+  - source: github:junelee220/folder-page
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
-  - source: github:quartz-community/explorer
+  - source: github:junelee220/explorer
     enabled: true
     options:
       title: "目录 (Index)"

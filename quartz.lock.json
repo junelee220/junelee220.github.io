@@ -110,10 +110,10 @@
       "installedAt": "2026-07-02T13:41:25.331Z"
     },
     "explorer": {
-      "source": "github:quartz-community/explorer",
-      "resolved": "https://github.com/quartz-community/explorer.git",
-      "commit": "a2dfd1373abe58ace461ebea0b4e94cb287f894e",
-      "installedAt": "2026-07-02T13:41:28.125Z"
+      "source": "github:junelee220/explorer",
+      "resolved": "https://github.com/junelee220/explorer.git",
+      "commit": "f97982960cd3364a4d7de221b18ba52ce596e574",
+      "installedAt": "2026-07-27T17:19:03.642852"
     },
     "favicon": {
       "source": "github:quartz-community/favicon",
@@ -122,10 +122,10 @@
       "installedAt": "2026-07-02T13:41:27.645Z"
     },
     "folder-page": {
-      "source": "github:quartz-community/folder-page",
-      "resolved": "https://github.com/quartz-community/folder-page.git",
-      "commit": "93304d22e1d7f09f93a33658ec273f7cb8d17793",
-      "installedAt": "2026-07-02T13:41:28.431Z"
+      "source": "github:junelee220/folder-page",
+      "resolved": "https://github.com/junelee220/folder-page.git",
+      "commit": "4cfe49e3150418794eb229e3f46340e936008788",
+      "installedAt": "2026-07-27T17:19:03.642852"
     },
     "fonts": {
       "source": "github:quartz-community/fonts",
