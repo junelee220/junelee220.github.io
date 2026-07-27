@@ -1,3 +1,54 @@
 @use "./variables.scss" as *;
 
 // put your custom CSS here!
+/* 强制将页面背景、左右侧栏统一为纯白色（仅在浅色模式下生效） */
+:root[saved-theme="light"] {
+    --light: #ffffff !important;
+  }
+  
+  body[data-theme="light"],
+  .page,
+  #quartz-body,
+  .sidebar,
+  .sidebar.left,
+  .sidebar.right {
+    background-color: #ffffff !important;
+  }
+  
+  /* 移除中间主内容区可能存在的阴影或边框分隔感，让三栏完全融为一体 */
+  .center,
+  article {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* 隐藏文章标题下方的日期和预计阅读时间 */
+.content-meta {
+    display: none !important;
+  }
+
+  // 自定义 ==高亮文本== 的颜色
+mark {
+    background-color: #00ff66;
+    color: #000000;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+  }
+
+.label-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--lightgray);
+}
+@media all and ($mobile) {
+  .label-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+article img {
+  width: 100%;
+}

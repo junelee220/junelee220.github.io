@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - v5
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache Quartz plugins
+        uses: actions/cache@v4
+        with:
+          path: .quartz/plugins
+          key: ${{ runner.os }}-plugins-${{ hashFiles('quartz.lock.json') }}
+
+      - run: npm ci
+      - run: npx quartz plugin install
+
+      - name: Apply plugin patches
+        run: |
+          cp patches/folder-page_PageList.tsx .quartz/plugins/folder-page/src/components/PageList.tsx
+          cp patches/explorer_Explorer.tsx .quartz/plugins/explorer/src/components/Explorer.tsx
+          cd .quartz/plugins/folder-page && npm install --no-audit --no-fund && npm run build && cd ../../..
+          cd .quartz/plugins/explorer && npm install --no-audit --no-fund && npm run build && cd ../../..
+
+      - name: Build
+        run: npx quartz build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
