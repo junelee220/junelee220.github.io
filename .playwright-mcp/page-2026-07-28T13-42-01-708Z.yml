@@ -1,0 +1,64 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - heading [level=2] [ref=e5]:
+      - link "子杰 zijie" [ref=e6] [cursor=pointer]:
+        - /url: ..
+    - button "Search" [ref=e10] [cursor=pointer]:
+      - img "Search" [ref=e11]
+      - paragraph [ref=e15]: Search
+    - generic [ref=e16]:
+      - button [expanded] [ref=e17] [cursor=pointer]:
+        - heading "目录 (Index)" [level=2] [ref=e18]
+      - group [ref=e20]:
+        - list [ref=e21]:
+          - listitem [ref=e22]
+  - generic [ref=e23]:
+    - generic [ref=e25]:
+      - navigation "breadcrumbs" [ref=e26]:
+        - generic [ref=e27]:
+          - link "Home" [ref=e28] [cursor=pointer]:
+            - /url: ../
+          - paragraph [ref=e29]: ❯
+        - generic [ref=e30]:
+          - link "01works" [ref=e31] [cursor=pointer]:
+            - /url: ../01works/
+          - paragraph [ref=e32]: ❯
+        - link "武汉地铁传说/ Wuhan Metro Legends" [ref=e34] [cursor=pointer]:
+          - /url: ""
+      - heading "武汉地铁传说/ Wuhan Metro Legends" [level=1] [ref=e35]
+      - text: ","
+      - list [ref=e36]:
+        - listitem [ref=e37]:
+          - link "#works" [ref=e38] [cursor=pointer]:
+            - /url: ../tags/works
+        - listitem [ref=e39]:
+          - link "#events" [ref=e40] [cursor=pointer]:
+            - /url: ../tags/events
+    - article [ref=e41]:
+      - generic [ref=e42]:
+        - paragraph [ref=e43]: 武汉正在飞速的拆和建，地铁成了这个都市速度的某种表征。我或搜集或捏造了这一系列地下 的见闻和传说，印成连环画故事，并让故事在假设的发生地产生别的影响，希望能发酵出和冷漠 的都市不一样的尚含情脉脉的迷雾。 这些或搜集或捏造的故事最早都是以照片的形式发在微博上面，有人信以为真并言之凿凿，为之 惋惜或捶足顿胸或愤恨恼怒;有人轻蔑质疑，大骂出口。后来我画成了漫画，在纸质版本印行前 后，将这些故事分别做成二维码放进了地铁里的某些潮湿的角落，只要扫描二维码就能在传说假 设的发生地读到这些故事，猜想身边匆匆来去的人是否也曾是里面的角色。 漫画的发行会选择了在武汉地铁的光谷站候车月台上进行，当然地铁里是禁止乞讨和售卖的，所 以这个发行会就像快闪一样，准时开始把漫画发到了参与者手上，不久我被地铁工作人员和保安 勒令收拾并离开。
+        - paragraph [ref=e44]:
+          - emphasis [ref=e45]: 武汉地铁光谷广场站是人流量最大的一个站点，为了方便广大市民该站特别增设了多达 20 台自动 售票机，并有专门提供给老弱病残的辅导通道。在对越反击战中失去双手的王爹爹说以前买票都 要用舌头去点售票屏，现在方便了有人代劳;今年 70 岁的刘太婆则认为该通道将老年人区别对待 是矮化该群体。
+          - text: (引用自《旧世界崩坏-武汉地铁传说暨我的妈呀第一期》第 10 页，MAMA 发行，西班牙和武汉)
+        - paragraph [ref=e46]: Wuhan is being demolished and built at a rapid pace, and the subway has become a certain symbol of the speed of the city. I either collected or fabricated this series of underground stories and legends, printed into a comic book story, and let the story in the hypothetical place of occurrence of other effects, hoping to ferment and indifferent to the city is not the same as the fog of emotion. These or collected or fabricated stories were first posted in the form of photos on the microblogging, some people believed in the truth and the words, regret or pounding chest or anger; some contemptuous questioning, cursing the export. Later I drew some comics, before and after the paper version was printed, these stories were made into QR codes placed in some wet corners of the subway, as long as the QR code can be scanned to read these stories in the hypothetical place of occurrence of the legend, guessing whether the people around the rush to and fro were also the characters. Of course, begging and selling are forbidden in the subway, so this release party for paper-printed version was like a flash mob, and the comics were distributed to the participants on time.
+        - paragraph [ref=e47]:
+          - emphasis [ref=e48]: Wuhan Metro Guanggu Square Station is one of the most crowded stations, and for the convenience of the general public the station has set up as many as 20 automatic ticket machines and a special counseling channel for the elderly, the sick and the disabled. Uncle Wang the old man, who lost his hands in the Sino-Vietnamese War, said he used to buy tickets with his tongue to click on the ticket screen, but now it is convenient to have someone to do it for him; Madam Liu, who is 70 years old this year, thinks the channel will treat the elderly differently is dwarfing the elderly group.
+          - text: (Quoted from “Wuhan Metro Legends or MAMA, vol.01”, Published by MAMA, Spain and Wuhan)
+        - paragraph [ref=e49]
+        - generic [ref=e50]:
+          - paragraph [ref=e52]: 武汉地铁传说 行为/事件和漫画，纸质印刷品，影像记录 武汉，2013
+          - paragraph [ref=e54]: Wuhan Metro Legends Performance/event, comic book Wuhan, China, 2013
+    - separator [ref=e55]
+  - contentinfo [ref=e57]:
+    - paragraph [ref=e58]:
+      - text: Created with
+      - link "Quartz v5.0.0" [ref=e59] [cursor=pointer]:
+        - /url: https://quartz.jzhao.xyz/
+      - text: © 2026
+    - list [ref=e60]:
+      - listitem [ref=e61]:
+        - link "GitHub" [ref=e62] [cursor=pointer]:
+          - /url: https://github.com/jackyzha0/quartz
+      - listitem [ref=e63]:
+        - link "Discord Community" [ref=e64] [cursor=pointer]:
+          - /url: https://discord.gg/cRFFHYye7t

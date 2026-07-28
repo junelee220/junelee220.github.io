@@ -1,0 +1,149 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - heading [level=2] [ref=e5]:
+      - link "子杰 zijie" [ref=e6] [cursor=pointer]:
+        - /url: ..
+    - button "Search" [ref=e10] [cursor=pointer]:
+      - img "Search" [ref=e11]
+      - paragraph [ref=e15]: Search
+    - generic [ref=e16]:
+      - button [expanded] [ref=e17] [cursor=pointer]:
+        - heading "目录 (Index)" [level=2] [ref=e18]
+      - group [ref=e20]:
+        - list [ref=e21]:
+          - listitem [ref=e22]
+          - listitem [ref=e23]:
+            - button "works" [ref=e27] [cursor=pointer]
+            - list [ref=e29]:
+              - listitem [ref=e30]:
+                - link "顺流而下（小组） From the River to the Sea towards COOP(Gonghao, Zijie and Yuanziyuan)" [ref=e31] [cursor=pointer]:
+                  - /url: /01works/25顺流而下（小组）
+                  - generic [ref=e32]:
+                    - generic [ref=e33]: 顺流而下（小组）
+                    - generic [ref=e34]: From the River to the Sea towards COOP(Gonghao, Zijie and Yuanziyuan)
+              - listitem [ref=e35]:
+                - link "漫步科学岛 A WANDERER ON THE SCIENCE ISLAND" [ref=e36] [cursor=pointer]:
+                  - /url: /01works/23漫步科学岛
+                  - generic [ref=e37]:
+                    - generic [ref=e38]: 漫步科学岛
+                    - generic [ref=e39]: A WANDERER ON THE SCIENCE ISLAND
+              - listitem [ref=e40]:
+                - link "武汉过年七天乐 HAPPY CHINESE NEWYEAR AND SEVEN DAYS towards COOP" [ref=e41] [cursor=pointer]:
+                  - /url: /01works/23过年七天乐
+                  - generic [ref=e42]:
+                    - generic [ref=e43]: 武汉过年七天乐
+                    - generic [ref=e44]: HAPPY CHINESE NEWYEAR AND SEVEN DAYS towards COOP
+              - listitem [ref=e45]:
+                - link "路上行舟 Goto street with Boat towards COOP" [ref=e46] [cursor=pointer]:
+                  - /url: /01works/22路上行舟
+                  - generic [ref=e47]:
+                    - generic [ref=e48]: 路上行舟
+                    - generic [ref=e49]: Goto street with Boat towards COOP
+              - listitem [ref=e50]:
+                - link "点_字_布（小组） ●text●tile (group)" [ref=e51] [cursor=pointer]:
+                  - /url: /01works/21点字布（小组）
+                  - generic [ref=e52]:
+                    - generic [ref=e53]: 点_字_布（小组）
+                    - generic [ref=e54]: ●text●tile (group)
+              - listitem [ref=e55]:
+                - link "香兰和美好生活 Keana and the Good Life" [ref=e56] [cursor=pointer]:
+                  - /url: /01works/19香兰（合作）
+                  - generic [ref=e57]:
+                    - generic [ref=e58]: 香兰和美好生活
+                    - generic [ref=e59]: Keana and the Good Life
+              - listitem [ref=e60]:
+                - 'link "雉尾电台第二期:OL 电波 Pheasantail Radio vol.02: OL Wave" [ref=e61] [cursor=pointer]':
+                  - /url: /01works/18-19雉尾电台
+                  - generic [ref=e62]:
+                    - generic [ref=e63]: 雉尾电台第二期:OL 电波
+                    - generic [ref=e64]: "Pheasantail Radio vol.02: OL Wave"
+              - listitem [ref=e65]:
+                - link "番薯种植计划 Sweet potato planting project" [ref=e66] [cursor=pointer]:
+                  - /url: /01works/17番薯种植计划
+                  - generic [ref=e67]:
+                    - generic [ref=e68]: 番薯种植计划
+                    - generic [ref=e69]: Sweet potato planting project
+              - listitem [ref=e70]:
+                - link "东湖龙王庙 East Lake Dragon King Temple" [ref=e71] [cursor=pointer]:
+                  - /url: /01works/15东湖龙王庙
+                  - generic [ref=e72]:
+                    - generic [ref=e73]: 东湖龙王庙
+                    - generic [ref=e74]: East Lake Dragon King Temple
+              - listitem [ref=e75]:
+                - link "流转仓库 Creacycle" [ref=e76] [cursor=pointer]:
+                  - /url: /01works/15流转仓库
+                  - generic [ref=e77]:
+                    - generic [ref=e78]: 流转仓库
+                    - generic [ref=e79]: Creacycle
+              - listitem [ref=e80]:
+                - link "东湖缥缈录 The Live Action RPG Game：East Lake Netherworld" [ref=e81] [cursor=pointer]:
+                  - /url: /01works/14东湖缥缈录
+                  - generic [ref=e82]:
+                    - generic [ref=e83]: 东湖缥缈录
+                    - generic [ref=e84]: The Live Action RPG Game：East Lake Netherworld
+              - listitem [ref=e85]:
+                - link "武汉地铁传说 Wuhan Metro Legends" [ref=e86] [cursor=pointer]:
+                  - /url: /01works/13武汉地铁传说
+                  - generic [ref=e87]:
+                    - generic [ref=e88]: 武汉地铁传说
+                    - generic [ref=e89]: Wuhan Metro Legends
+          - listitem [ref=e90]:
+            - button "events" [ref=e94] [cursor=pointer]
+          - listitem [ref=e95]:
+            - button "researches" [ref=e99] [cursor=pointer]
+          - listitem [ref=e100]:
+            - button "projects" [ref=e104] [cursor=pointer]
+          - listitem [ref=e105]:
+            - button "publications" [ref=e109] [cursor=pointer]
+          - listitem [ref=e110]:
+            - button "experiences" [ref=e114] [cursor=pointer]
+  - generic [ref=e115]:
+    - generic [ref=e117]:
+      - navigation "breadcrumbs" [ref=e118]:
+        - generic [ref=e119]:
+          - link "Home" [ref=e120] [cursor=pointer]:
+            - /url: ../
+          - paragraph [ref=e121]: ❯
+        - generic [ref=e122]:
+          - link "01works" [ref=e123] [cursor=pointer]:
+            - /url: ../01works/
+          - paragraph [ref=e124]: ❯
+        - link "点_字_布（小组）/ ●text●tile (group)" [ref=e126] [cursor=pointer]:
+          - /url: ""
+      - heading "点_字_布（小组）/ ●text●tile (group)" [level=1] [ref=e127]
+      - text: ","
+      - list [ref=e128]:
+        - listitem [ref=e129]:
+          - link "#works" [ref=e130] [cursor=pointer]:
+            - /url: ../tags/works
+        - listitem [ref=e131]:
+          - link "#researches" [ref=e132] [cursor=pointer]:
+            - /url: ../tags/researches
+        - listitem [ref=e133]:
+          - link "#chinese-word-processing" [ref=e134] [cursor=pointer]:
+            - /url: ../tags/chinese-word-processing
+    - article [ref=e135]:
+      - generic [ref=e136]:
+        - paragraph [ref=e137]: "“点_字_布”是基于性别田野、媒介研究和编织自动化技术的一个书写装置:计算机驱动的纺织机 随着数据输入生成基于不同赋值的往复运动，编结筒状的贴身织物，围罩成一个讨论场域。这个 讨论场域涵盖了编织与计算、智识生产的性别属性、编织产品与身体、编织工业中的基于性别的 劳动等议题。 ●text●tile is a writing installation informed by the fieldwork on gender, media studies, and automated weaving technologies: a weaving device powered by the computer generates circular movement based on different ranges of data input, weaving together a tube-form piece that is intimate to the body. The installation forms a field of discourse, covering the intersection between weaving and computation, the role of gender in relation to intellectual production, the relationship between textile products and the body, and the questions of gender and labor in the textile industry."
+        - paragraph [ref=e138]
+        - generic [ref=e139]:
+          - paragraph [ref=e141]:
+            - strong [ref=e142]: 点_字_布
+            - text: 计算编委会(李子杰，温璧伊，周蓬岸) 装置，印刷品 不准停电 明当代美术馆/ 雷电所，上海，2021
+          - paragraph [ref=e144]:
+            - strong [ref=e145]: ●text●tile
+            - text: Weave By Committee (LEE Zijie，WEN Biyi， ZHOU Pengan) Installation, Prints DO NOT BLACK OUT! MCAM/ Raiden Institution, Shanghai, China, 2021
+    - separator [ref=e146]
+  - contentinfo [ref=e148]:
+    - paragraph [ref=e149]:
+      - text: Created with
+      - link "Quartz v5.0.0" [ref=e150] [cursor=pointer]:
+        - /url: https://quartz.jzhao.xyz/
+      - text: © 2026
+    - list [ref=e151]:
+      - listitem [ref=e152]:
+        - link "GitHub" [ref=e153] [cursor=pointer]:
+          - /url: https://github.com/jackyzha0/quartz
+      - listitem [ref=e154]:
+        - link "Discord Community" [ref=e155] [cursor=pointer]:
+          - /url: https://discord.gg/cRFFHYye7t

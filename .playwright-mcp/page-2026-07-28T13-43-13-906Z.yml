@@ -1,0 +1,149 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e4]:
+    - heading [level=2] [ref=f1e5]:
+      - link "子杰 zijie" [ref=f1e6] [cursor=pointer]:
+        - /url: ..
+    - button "Search" [ref=f1e10] [cursor=pointer]:
+      - img "Search" [ref=f1e11]
+      - paragraph [ref=f1e15]: Search
+    - generic [ref=f1e16]:
+      - button [expanded] [ref=f1e17] [cursor=pointer]:
+        - heading "目录 (Index)" [level=2] [ref=f1e18]
+      - group [ref=f1e20]:
+        - list [ref=f1e21]:
+          - listitem [ref=f1e22]
+          - listitem [ref=f1e23]:
+            - button "works" [ref=f1e27] [cursor=pointer]
+            - list [ref=f1e29]:
+              - listitem [ref=f1e30]:
+                - link "顺流而下（小组） From the River to the Sea towards COOP(Gonghao, Zijie and Yuanziyuan)" [ref=f1e31] [cursor=pointer]:
+                  - /url: /01works/25顺流而下（小组）
+                  - generic [ref=f1e32]:
+                    - generic [ref=f1e33]: 顺流而下（小组）
+                    - generic [ref=f1e34]: From the River to the Sea towards COOP(Gonghao, Zijie and Yuanziyuan)
+              - listitem [ref=f1e35]:
+                - link "漫步科学岛 A WANDERER ON THE SCIENCE ISLAND" [ref=f1e36] [cursor=pointer]:
+                  - /url: /01works/23漫步科学岛
+                  - generic [ref=f1e37]:
+                    - generic [ref=f1e38]: 漫步科学岛
+                    - generic [ref=f1e39]: A WANDERER ON THE SCIENCE ISLAND
+              - listitem [ref=f1e40]:
+                - link "武汉过年七天乐 HAPPY CHINESE NEWYEAR AND SEVEN DAYS towards COOP" [ref=f1e41] [cursor=pointer]:
+                  - /url: /01works/23过年七天乐
+                  - generic [ref=f1e42]:
+                    - generic [ref=f1e43]: 武汉过年七天乐
+                    - generic [ref=f1e44]: HAPPY CHINESE NEWYEAR AND SEVEN DAYS towards COOP
+              - listitem [ref=f1e45]:
+                - link "路上行舟 Goto street with Boat towards COOP" [ref=f1e46] [cursor=pointer]:
+                  - /url: /01works/22路上行舟
+                  - generic [ref=f1e47]:
+                    - generic [ref=f1e48]: 路上行舟
+                    - generic [ref=f1e49]: Goto street with Boat towards COOP
+              - listitem [ref=f1e50]:
+                - link "点_字_布（小组） ●text●tile (group)" [ref=f1e51] [cursor=pointer]:
+                  - /url: /01works/21点字布（小组）
+                  - generic [ref=f1e52]:
+                    - generic [ref=f1e53]: 点_字_布（小组）
+                    - generic [ref=f1e54]: ●text●tile (group)
+              - listitem [ref=f1e55]:
+                - link "香兰和美好生活 Keana and the Good Life" [ref=f1e56] [cursor=pointer]:
+                  - /url: /01works/19香兰（合作）
+                  - generic [ref=f1e57]:
+                    - generic [ref=f1e58]: 香兰和美好生活
+                    - generic [ref=f1e59]: Keana and the Good Life
+              - listitem [ref=f1e60]:
+                - 'link "雉尾电台第二期:OL 电波 Pheasantail Radio vol.02: OL Wave" [ref=f1e61] [cursor=pointer]':
+                  - /url: /01works/18-19雉尾电台
+                  - generic [ref=f1e62]:
+                    - generic [ref=f1e63]: 雉尾电台第二期:OL 电波
+                    - generic [ref=f1e64]: "Pheasantail Radio vol.02: OL Wave"
+              - listitem [ref=f1e65]:
+                - link "番薯种植计划 Sweet potato planting project" [ref=f1e66] [cursor=pointer]:
+                  - /url: /01works/17番薯种植计划
+                  - generic [ref=f1e67]:
+                    - generic [ref=f1e68]: 番薯种植计划
+                    - generic [ref=f1e69]: Sweet potato planting project
+              - listitem [ref=f1e70]:
+                - link "东湖龙王庙 East Lake Dragon King Temple" [ref=f1e71] [cursor=pointer]:
+                  - /url: /01works/15东湖龙王庙
+                  - generic [ref=f1e72]:
+                    - generic [ref=f1e73]: 东湖龙王庙
+                    - generic [ref=f1e74]: East Lake Dragon King Temple
+              - listitem [ref=f1e75]:
+                - link "流转仓库 Creacycle" [ref=f1e76] [cursor=pointer]:
+                  - /url: /01works/15流转仓库
+                  - generic [ref=f1e77]:
+                    - generic [ref=f1e78]: 流转仓库
+                    - generic [ref=f1e79]: Creacycle
+              - listitem [ref=f1e80]:
+                - link "东湖缥缈录 The Live Action RPG Game：East Lake Netherworld" [ref=f1e81] [cursor=pointer]:
+                  - /url: /01works/14东湖缥缈录
+                  - generic [ref=f1e82]:
+                    - generic [ref=f1e83]: 东湖缥缈录
+                    - generic [ref=f1e84]: The Live Action RPG Game：East Lake Netherworld
+              - listitem [ref=f1e85]:
+                - link "武汉地铁传说 Wuhan Metro Legends" [ref=f1e86] [cursor=pointer]:
+                  - /url: /01works/13武汉地铁传说
+                  - generic [ref=f1e87]:
+                    - generic [ref=f1e88]: 武汉地铁传说
+                    - generic [ref=f1e89]: Wuhan Metro Legends
+          - listitem [ref=f1e90]:
+            - button "events" [ref=f1e94] [cursor=pointer]
+          - listitem [ref=f1e95]:
+            - button "researches" [ref=f1e99] [cursor=pointer]
+          - listitem [ref=f1e100]:
+            - button "projects" [ref=f1e104] [cursor=pointer]
+          - listitem [ref=f1e105]:
+            - button "publications" [ref=f1e109] [cursor=pointer]
+          - listitem [ref=f1e110]:
+            - button "experiences" [ref=f1e114] [cursor=pointer]
+  - generic [ref=f1e115]:
+    - generic [ref=f1e117]:
+      - navigation "breadcrumbs" [ref=f1e118]:
+        - generic [ref=f1e119]:
+          - link "Home" [ref=f1e120] [cursor=pointer]:
+            - /url: ../
+          - paragraph [ref=f1e121]: ❯
+        - generic [ref=f1e122]:
+          - link "01works" [ref=f1e123] [cursor=pointer]:
+            - /url: ../01works/
+          - paragraph [ref=f1e124]: ❯
+        - link "武汉地铁传说/ Wuhan Metro Legends" [ref=f1e126] [cursor=pointer]:
+          - /url: ""
+      - heading "武汉地铁传说/ Wuhan Metro Legends" [level=1] [ref=f1e127]
+      - text: ","
+      - list [ref=f1e128]:
+        - listitem [ref=f1e129]:
+          - link "#works" [ref=f1e130] [cursor=pointer]:
+            - /url: ../tags/works
+        - listitem [ref=f1e131]:
+          - link "#events" [ref=f1e132] [cursor=pointer]:
+            - /url: ../tags/events
+    - article [ref=f1e133]:
+      - generic [ref=f1e134]:
+        - paragraph [ref=f1e135]: 武汉正在飞速的拆和建，地铁成了这个都市速度的某种表征。我或搜集或捏造了这一系列地下 的见闻和传说，印成连环画故事，并让故事在假设的发生地产生别的影响，希望能发酵出和冷漠 的都市不一样的尚含情脉脉的迷雾。 这些或搜集或捏造的故事最早都是以照片的形式发在微博上面，有人信以为真并言之凿凿，为之 惋惜或捶足顿胸或愤恨恼怒;有人轻蔑质疑，大骂出口。后来我画成了漫画，在纸质版本印行前 后，将这些故事分别做成二维码放进了地铁里的某些潮湿的角落，只要扫描二维码就能在传说假 设的发生地读到这些故事，猜想身边匆匆来去的人是否也曾是里面的角色。 漫画的发行会选择了在武汉地铁的光谷站候车月台上进行，当然地铁里是禁止乞讨和售卖的，所 以这个发行会就像快闪一样，准时开始把漫画发到了参与者手上，不久我被地铁工作人员和保安 勒令收拾并离开。
+        - paragraph [ref=f1e136]:
+          - emphasis [ref=f1e137]: 武汉地铁光谷广场站是人流量最大的一个站点，为了方便广大市民该站特别增设了多达 20 台自动 售票机，并有专门提供给老弱病残的辅导通道。在对越反击战中失去双手的王爹爹说以前买票都 要用舌头去点售票屏，现在方便了有人代劳;今年 70 岁的刘太婆则认为该通道将老年人区别对待 是矮化该群体。
+          - text: (引用自《旧世界崩坏-武汉地铁传说暨我的妈呀第一期》第 10 页，MAMA 发行，西班牙和武汉)
+        - paragraph [ref=f1e138]: Wuhan is being demolished and built at a rapid pace, and the subway has become a certain symbol of the speed of the city. I either collected or fabricated this series of underground stories and legends, printed into a comic book story, and let the story in the hypothetical place of occurrence of other effects, hoping to ferment and indifferent to the city is not the same as the fog of emotion. These or collected or fabricated stories were first posted in the form of photos on the microblogging, some people believed in the truth and the words, regret or pounding chest or anger; some contemptuous questioning, cursing the export. Later I drew some comics, before and after the paper version was printed, these stories were made into QR codes placed in some wet corners of the subway, as long as the QR code can be scanned to read these stories in the hypothetical place of occurrence of the legend, guessing whether the people around the rush to and fro were also the characters. Of course, begging and selling are forbidden in the subway, so this release party for paper-printed version was like a flash mob, and the comics were distributed to the participants on time.
+        - paragraph [ref=f1e139]:
+          - emphasis [ref=f1e140]: Wuhan Metro Guanggu Square Station is one of the most crowded stations, and for the convenience of the general public the station has set up as many as 20 automatic ticket machines and a special counseling channel for the elderly, the sick and the disabled. Uncle Wang the old man, who lost his hands in the Sino-Vietnamese War, said he used to buy tickets with his tongue to click on the ticket screen, but now it is convenient to have someone to do it for him; Madam Liu, who is 70 years old this year, thinks the channel will treat the elderly differently is dwarfing the elderly group.
+          - text: (Quoted from “Wuhan Metro Legends or MAMA, vol.01”, Published by MAMA, Spain and Wuhan)
+        - paragraph [ref=f1e141]
+        - generic [ref=f1e142]:
+          - paragraph [ref=f1e144]: 武汉地铁传说 行为/事件和漫画，纸质印刷品，影像记录 武汉，2013
+          - paragraph [ref=f1e146]: Wuhan Metro Legends Performance/event, comic book Wuhan, China, 2013
+    - separator [ref=f1e147]
+  - contentinfo [ref=f1e149]:
+    - paragraph [ref=f1e150]:
+      - text: Created with
+      - link "Quartz v5.0.0" [ref=f1e151] [cursor=pointer]:
+        - /url: https://quartz.jzhao.xyz/
+      - text: © 2026
+    - list [ref=f1e152]:
+      - listitem [ref=f1e153]:
+        - link "GitHub" [ref=f1e154] [cursor=pointer]:
+          - /url: https://github.com/jackyzha0/quartz
+      - listitem [ref=f1e155]:
+        - link "Discord Community" [ref=f1e156] [cursor=pointer]:
+          - /url: https://discord.gg/cRFFHYye7t
