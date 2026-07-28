@@ -35,10 +35,19 @@ const defaultOptions: ExplorerOptions = {
   folderClickBehavior: "link",
   useSavedState: true,
   mapFn: (node: FileTrieNode) => {
+    if (node.isFolder && node.displayName) {
+      node.displayName = node.displayName.replace(/^\d{2}(-\d{2})?[-_\s]*/, "");
+    }
     return node;
   },
   sortFn: (a: FileTrieNode, b: FileTrieNode) => {
-    if ((!a.isFolder && !b.isFolder) || (a.isFolder && b.isFolder)) {
+    if (a.isFolder && b.isFolder) {
+      return (a.slugSegment || "").localeCompare(b.slugSegment || "", undefined, {
+        numeric: true,
+        sensitivity: "base",
+      });
+    }
+    if ((!a.isFolder && !b.isFolder)) {
       const yearOf = (n: FileTrieNode): number => {
         const fp = (n.data?.filePath as string) || n.slugSegment || "";
         const name = fp.split("/").pop() || fp;
