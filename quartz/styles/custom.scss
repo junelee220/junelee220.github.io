@@ -51,6 +51,15 @@ mark {
 
 article img {
   width: 100%;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  display: block;
+}
+article p:has(> img),
+article p:has(> a > img) {
+  margin: 0 !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
 }
 
 a.tag-link {
