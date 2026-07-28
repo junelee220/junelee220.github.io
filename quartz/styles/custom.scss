@@ -108,3 +108,20 @@ a.tag-link:hover {
 .sidebar h2.page-title a:hover {
   color: #7a43b5 !important;
 }
+
+.bilingual-title {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  line-height: 1.2 !important;
+}
+.bilingual-title .title-zh {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+}
+.bilingual-title .title-en {
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  color: var(--darkgray) !important;
+  opacity: 0.8 !important;
+}
