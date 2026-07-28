@@ -112,8 +112,8 @@
     "explorer": {
       "source": "github:junelee220/explorer",
       "resolved": "https://github.com/junelee220/explorer.git",
-      "commit": "f97982960cd3364a4d7de221b18ba52ce596e574",
-      "installedAt": "2026-07-27T17:19:03.642852"
+      "commit": "79dea356af41269b69047ddb6a1d573dc1bb87f9",
+      "installedAt": "2026-07-28T10:46:41.626286"
     },
     "favicon": {
       "source": "github:quartz-community/favicon",
