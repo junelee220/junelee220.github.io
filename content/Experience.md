@@ -1,3 +1,10 @@
+---
+title: ">>>经历/ Experience"
+date: 2025-01-01
+tags: [exhibitions, residences]
+---
+
+## Exhibitions:
 
 - // 颠倒车站（44月刊小组）和顺流而下（小组）；伟大的掩饰 Viparyāsa Station, group (44 Monthly); The Great Camouflage | 上海外滩美术馆 Rockbund Art Museum; 上海 Shanghai, CN | 2025
 
@@ -22,3 +29,6 @@
 - // 漫画星球之中国独立漫画展 MANGA PLANET: Chinese Comix Alternative | 蓬皮杜艺术中心 Centre Georges Pompidou; 巴黎 Paris, FR | 2012
     
 - // 法国安古兰国际漫画艺术节 International Festival of Comics | 法国安古兰 Angouleme, FR | 2011
+
+
+## Residencies
