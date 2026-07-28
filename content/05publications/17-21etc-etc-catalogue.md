@@ -1,7 +1,9 @@
 ---
-title: "等等目录/ Etc., Etc. Catalogue"
+title: ">>>等等目录/ Etc., Etc. Catalogue"
 date: 2017-01-01
-unlisted: true
+tags:
+  - publications
+  - researches
 ---
 《等等目录》是点点宣传部的跨地域研究出版项目，以田野研究为基础，通过风力装置和印刷品探讨边缘领导者（marginal leader）的概念和自组织实践。第三期"即将、已然"聚焦中越边境两地的文化交汇地带，以女性叙事的形式出版，内容横跨神话、政治争斗和性别表征。
 

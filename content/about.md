@@ -1,2 +1,0 @@
-子杰是一个漫画家、写作者和行动者；现居武汉，主要关注城市化和空间正义等方面的问题。  
-June LEE/ Zijie was born in Yulin, Guangxi Province and currently lives and works in Wuhan. He is an alternative comics maker, writer and activist who focuses on illustration and manga culture as an artistic tool within anti-gentrification movements, revolving especially around marginalised characters involved with issues of urbanisation and spatial justice.

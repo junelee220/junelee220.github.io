@@ -3,37 +3,37 @@
 // put your custom CSS here!
 /* 强制将页面背景、左右侧栏统一为纯白色（仅在浅色模式下生效） */
 :root[saved-theme="light"] {
-    --light: #ffffff !important;
-  }
-  
-  body[data-theme="light"],
-  .page,
-  #quartz-body,
-  .sidebar,
-  .sidebar.left,
-  .sidebar.right {
-    background-color: #ffffff !important;
-  }
-  
-  /* 移除中间主内容区可能存在的阴影或边框分隔感，让三栏完全融为一体 */
-  .center,
-  article {
-    background-color: transparent !important;
-    box-shadow: none !important;
-  }
+  --light: #ffffff !important;
+}
 
-  /* 隐藏文章标题下方的日期和预计阅读时间 */
+body[data-theme="light"],
+.page,
+#quartz-body,
+.sidebar,
+.sidebar.left,
+.sidebar.right {
+  background-color: #ffffff !important;
+}
+
+/* 移除中间主内容区可能存在的阴影或边框分隔感，让三栏完全融为一体 */
+.center,
+article {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 隐藏文章标题下方的日期和预计阅读时间 */
 .content-meta {
-    display: none !important;
-  }
+  display: none !important;
+}
 
-  // 自定义 ==高亮文本== 的颜色
+// 自定义 ==高亮文本== 的颜色
 mark {
-    background-color: #00ff66;
-    color: #000000;
-    padding: 0.1em 0.3em;
-    border-radius: 2px;
-  }
+  background-color: #00ff66;
+  color: #000000;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
 
 .label-cols {
   display: grid;
@@ -51,4 +51,60 @@ mark {
 
 article img {
   width: 100%;
+}
+
+a.tag-link {
+  background-color: #fff236 !important;
+  color: #7a43b5 !important;
+  border-radius: 3px;
+  padding: 0.05em 0.4em;
+  font-weight: 600;
+}
+a.tag-link:hover {
+  background-color: #fff89c !important;
+  color: #5a2d8f !important;
+}
+
+.breadcrumb-container a,
+.breadcrumb-element a {
+  color: #7a43b5 !important;
+  font-weight: 600;
+}
+.breadcrumb-container a:hover,
+.breadcrumb-element a:hover {
+  color: #5a2d8f !important;
+}
+.breadcrumb-element p {
+  color: #7a43b5 !important;
+}
+
+.folder-container div > a,
+.folder-container div > button span,
+.bilingual-title .title-zh {
+  color: #2b2b2b !important;
+}
+.folder-container div > a:hover,
+.folder-container div > button:hover span,
+.bilingual-title .title-zh:hover {
+  color: #7a43b5 !important;
+}
+.explorer-content ul li > a {
+  color: #4e4e4e !important;
+  opacity: 0.75;
+}
+.explorer-content ul li > a:hover {
+  color: #7a43b5 !important;
+  opacity: 1;
+}
+.explorer-content ul li > a.active,
+.explorer-content ul li > a.is-active {
+  color: #7a43b5 !important;
+  opacity: 1;
+}
+
+.sidebar h2.page-title a {
+  color: #000000 !important;
+}
+.sidebar h2.page-title a:hover {
+  color: #7a43b5 !important;
 }
