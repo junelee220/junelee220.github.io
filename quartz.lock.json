@@ -271,10 +271,10 @@
       "installedAt": "2026-07-02T13:41:31.977Z"
     },
     "tag-page": {
-      "source": "github:quartz-community/tag-page",
-      "resolved": "https://github.com/quartz-community/tag-page.git",
-      "commit": "eabf3eec55c0bab7f49e69957341f34d2ae3c5a1",
-      "installedAt": "2026-07-02T13:41:27.506Z"
+      "source": "github:junelee220/tag-page",
+      "resolved": "https://github.com/junelee220/tag-page.git",
+      "commit": "ff5709cffb4f6269db4935a857f00b5bdf5da6e3",
+      "installedAt": "2026-07-28T09:59:48.573944"
     },
     "unlisted-pages": {
       "source": "github:quartz-community/unlisted-pages",
