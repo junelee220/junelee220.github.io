@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>子杰网站编辑器</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://unpkg.com/isomorphic-git"></script>
+<script type="module">
+  import http from "https://unpkg.com/isomorphic-git/http/web/index.js"
+  window.gitHttp = http
+</script>
+<style>
+:root{
+  --primary:#7a43b5;--primary-hover:#5a2d8f;--primary-light:#f3edf9;
+  --bg:#fff;--sidebar-bg:#faf8f8;--text:#2b2b2b;--text-light:#6b6b6b;
+  --border:#e5e5e5;--danger:#dc3545;--success:#28a745;--warn:#ffc107;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+[data-theme="dark"]{
+  --primary:#9d6cd9;--primary-hover:#7a43b5;--primary-light:#2a1f3d;
+  --bg:#1a1a1a;--sidebar-bg:#242424;--text:#e0e0e0;--text-light:#999;
+  --border:#383838;--danger:#ff5252;--success:#4caf50;--warn:#ffd54f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,"Source Sans Pro","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);font-size:14px;transition:background .2s,color .2s}
+button{cursor:pointer;font-family:inherit;font-size:inherit;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit;color:inherit;background:var(--bg)}
+a{color:var(--primary)}
+
+#app{display:grid;grid-template-columns:280px 1fr;grid-template-rows:52px 1fr;grid-template-areas:"header header" "sidebar main";height:100vh}
+
+header{grid-area:header;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--bg);border-bottom:1px solid var(--border);z-index:10}
+header .logo{font-weight:700;font-size:15px;color:var(--primary);letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+header .actions{display:flex;gap:8px;align-items:center}
+.btn{padding:6px 16px;border-radius:4px;font-weight:500;transition:all .15s;border:1px solid var(--border);background:var(--bg);color:var(--text)}
+.btn:hover{border-color:var(--primary);color:var(--primary)}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover);color:#fff}
+.btn-danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn-danger:hover{opacity:.85}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:3px 10px;font-size:13px}
+.btn-icon{padding:6px 10px;font-size:16px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text)}
+.btn-icon:hover{border-color:var(--primary);color:var(--primary)}
+.mobile-only{display:none}
+
+aside{grid-area:sidebar;background:var(--sidebar-bg);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+aside .search{padding:10px;border-bottom:1px solid var(--border);display:flex;gap:6px}
+aside .search input{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:4px;outline:none;background:var(--bg);color:var(--text)}
+aside .search input:focus{border-color:var(--primary)}
+.search-toggle{padding:6px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text-light);font-size:13px;white-space:nowrap;transition:all .15s}
+.search-toggle.active{background:var(--primary-light);color:var(--primary);border-color:var(--primary)}
+.search-toggle:hover{border-color:var(--primary)}
+.file-tree{flex:1;overflow-y:auto;padding:4px 0}
+.folder-item{font-weight:600;font-size:13px;padding:6px 12px;cursor:pointer;user-select:none;display:flex;align-items:center;gap:4px;color:var(--text)}
+.folder-item:hover{color:var(--primary)}
+.folder-item .arrow{font-size:10px;transition:transform .15s;width:12px}
+.folder-item.collapsed .arrow{transform:rotate(-90deg)}
+.folder-item .count{color:var(--text-light);font-weight:400;font-size:12px;margin-left:auto}
+.file-list{overflow:hidden}
+.file-item{padding:4px 12px 4px 28px;cursor:pointer;font-size:13px;color:var(--text-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent;display:flex;align-items:center}
+.file-item:hover{background:var(--primary-light);color:var(--primary)}
+.file-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:500}
+.file-item .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--warn);margin-right:6px;flex-shrink:0}
+.file-item .dot.modified{background:var(--warn)}
+.file-item .file-actions{margin-left:auto;display:none;gap:4px}
+.file-item:hover .file-actions{display:flex}
+.file-item .file-actions button{padding:0 4px;font-size:12px;color:var(--text-light);background:none;border:none}
+.file-item .file-actions button:hover{color:var(--primary)}
+aside .new-btn{padding:10px;border-top:1px solid var(--border)}
+aside .new-btn button{width:100%;padding:8px;border:1px dashed var(--primary);color:var(--primary);border-radius:4px;background:transparent;font-weight:500}
+aside .new-btn button:hover{background:var(--primary-light)}
+
+main{grid-area:main;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--sidebar-bg);padding:0 12px}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--text-light);border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--primary)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-content{flex:1;overflow-y:auto;padding:24px 32px}
+
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-weight:600;margin-bottom:6px;font-size:13px;color:var(--text)}
+.form-group input[type=text],.form-group input[type=date],.form-group select{
+  width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:4px;outline:none;background:var(--bg);color:var(--text)
+}
+.form-group input:focus,.form-group select:focus{border-color:var(--primary)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hint{font-size:12px;color:var(--text-light);margin-top:4px}
+.form-inline{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.form-inline label{font-size:12px;font-weight:600;color:var(--text-light);white-space:nowrap}
+.form-inline input{padding:4px 10px;border:1px solid var(--border);border-radius:4px;outline:none;background:var(--bg);color:var(--text)}
+.form-inline input:focus{border-color:var(--primary)}
+.form-inline input[type=text]{min-width:120px}
+.form-inline .tag-input{flex:1;min-height:30px;padding:3px 6px}
+
+.tag-input{display:flex;flex-wrap:wrap;gap:6px;padding:6px;border:1px solid var(--border);border-radius:4px;min-height:38px;align-items:center;background:var(--bg)}
+.tag-input:focus-within{border-color:var(--primary)}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:var(--primary-light);color:var(--primary);border-radius:3px;font-size:13px;font-weight:500}
+.tag-chip .remove{cursor:pointer;opacity:.6;font-size:14px}
+.tag-chip .remove:hover{opacity:1}
+.tag-input input{border:none;outline:none;flex:1;min-width:80px;padding:2px 4px;background:var(--bg);color:var(--text)}
+
+.md-toolbar{display:flex;gap:2px;padding:4px 8px;border:1px solid var(--border);border-bottom:none;border-radius:4px 4px 0 0;background:var(--sidebar-bg);flex-wrap:wrap}
+.md-toolbar button{padding:4px 8px;font-size:13px;border-radius:3px;color:var(--text-light);transition:all .1s;min-width:28px}
+.md-toolbar button:hover{background:var(--primary-light);color:var(--primary)}
+.md-toolbar .divider{width:1px;background:var(--border);margin:2px 4px}
+
+.md-editor{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 260px);min-height:280px}
+.md-editor-left{display:flex;flex-direction:column}
+.md-editor-left textarea{width:100%;flex:1;border:1px solid var(--border);border-radius:0 0 4px 4px;padding:12px;font-family:var(--mono);font-size:13px;line-height:1.6;resize:none;outline:none;background:var(--bg);color:var(--text)}
+.md-editor-left textarea:focus{border-color:var(--primary)}
+.md-editor-left.dragover{border-color:var(--primary);background:var(--primary-light)}
+.md-editor-left.dragover textarea{border-color:var(--primary)}
+.md-preview{border:1px solid var(--border);border-radius:4px;padding:16px;overflow-y:auto;background:var(--bg);line-height:1.7;color:var(--text)}
+.md-preview h1,.md-preview h2,.md-preview h3{margin:12px 0 6px}
+.md-preview p{margin:8px 0}
+.md-preview img{max-width:100%;display:block;margin:8px 0}
+.md-preview blockquote{border-left:3px solid var(--border);padding-left:12px;color:var(--text-light);margin:8px 0}
+
+.edit-divider{border:none;border-top:1px solid var(--border);margin:24px 0 16px}
+
+.label-editor{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:calc(100vh - 180px)}
+.label-col{display:flex;flex-direction:column;gap:8px}
+.label-col h4{font-size:13px;font-weight:600;color:var(--text)}
+.label-col textarea{flex:1;width:100%;border:1px solid var(--border);border-radius:4px;padding:12px;font-size:13px;line-height:1.8;resize:none;outline:none;font-family:inherit;background:var(--bg);color:var(--text)}
+.label-col textarea:focus{border-color:var(--primary)}
+.label-preview{border:1px solid var(--border);border-radius:4px;padding:16px;background:var(--sidebar-bg);font-size:13px;line-height:1.8;max-height:200px;overflow-y:auto;color:var(--text)}
+.label-preview h1,.label-preview h2,.label-preview h3{margin:8px 0 4px}
+.label-preview p{margin:6px 0}
+.label-preview img{max-width:100%}
+
+.raw-view{width:100%;height:calc(100vh - 180px);border:1px solid var(--border);border-radius:4px;padding:12px;font-family:var(--mono);font-size:12px;line-height:1.6;resize:none;outline:none;background:var(--sidebar-bg);color:var(--text)}
+
+.full-preview{max-width:720px;margin:0 auto;line-height:1.8;color:var(--text)}
+.full-preview h1{font-size:1.6rem;margin-bottom:8px}
+.full-preview h2{font-size:1.3rem;margin:16px 0 8px}
+.full-preview p{margin:10px 0}
+.full-preview img{max-width:100%;display:block;margin:10px 0}
+.full-preview blockquote{border-left:3px solid var(--border);padding-left:12px;color:var(--text-light);margin:10px 0}
+.full-preview .label-cols{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg);border-radius:8px;padding:24px;min-width:420px;max-width:90vw;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.modal h3{margin-bottom:16px;font-size:16px;color:var(--primary)}
+.modal .form-group{margin-bottom:14px}
+.modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.modal .filename-preview{padding:8px 12px;background:var(--sidebar-bg);border-radius:4px;font-family:var(--mono);font-size:13px;color:var(--primary);margin-top:4px}
+
+.context-menu{position:fixed;background:var(--bg);border:1px solid var(--border);border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:300;display:none;min-width:140px;padding:4px 0}
+.context-menu.show{display:block}
+.context-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;font-size:13px;text-align:left;color:var(--text)}
+.context-menu button:hover{background:var(--primary-light);color:var(--primary)}
+.context-menu button.danger:hover{background:rgba(220,53,69,.1);color:var(--danger)}
+
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:4px;color:#fff;font-size:14px;font-weight:500;z-index:200;transform:translateY(100px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--success)}
+.toast.error{background:var(--danger)}
+.toast.info{background:var(--primary)}
+
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-light);gap:8px}
+.empty .icon{font-size:48px;opacity:.3}
+
+.status-bar{padding:4px 16px;border-top:1px solid var(--border);background:var(--sidebar-bg);font-size:12px;color:var(--text-light);display:flex;gap:16px;align-items:center}
+.status-bar .status-words{margin-left:auto}
+
+.open-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center}
+.open-overlay.hidden{display:none}
+.open-card{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;padding:48px}
+.open-card .open-icon{font-size:64px;opacity:.5}
+.open-card h2{font-size:20px;color:var(--primary)}
+.open-card p{color:var(--text-light);font-size:14px}
+.open-card code{background:var(--sidebar-bg);padding:2px 6px;border-radius:3px;font-family:var(--mono);font-size:13px}
+.open-card .btn{margin-top:8px;padding:10px 24px;font-size:15px}
+
+.git-status-line{font-size:12px;padding:2px 0;font-family:var(--mono)}
+.git-status-line .badge{display:inline-block;width:40px;text-align:center;border-radius:2px;font-weight:600;margin-right:6px}
+.git-status-line .badge.added{background:var(--success);color:#fff}
+.git-status-line .badge.modified{background:var(--warn);color:#000}
+.git-status-line .badge.deleted{background:var(--danger);color:#fff}
+.git-status-line .badge.untracked{background:var(--text-light);color:#fff}
+
+@media (max-width:768px){
+  #app{grid-template-columns:1fr;grid-template-rows:52px 1fr;grid-template-areas:"header" "main"}
+  aside{position:fixed;left:-280px;top:52px;bottom:0;width:280px;z-index:50;transition:left .2s;box-shadow:2px 0 8px rgba(0,0,0,.1)}
+  aside.show{left:0}
+  .mobile-only{display:inline-block}
+  .md-editor,.label-editor{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:calc(100vh - 480px);min-height:200px}
+  .form-row{grid-template-columns:1fr}
+  header .logo{font-size:13px}
+  .btn{padding:4px 10px;font-size:12px}
+  .tab{padding:8px 10px;font-size:12px}
+  .tab-content{padding:16px}
+  .modal{min-width:90vw;padding:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="open-overlay" class="open-overlay">
+  <div class="open-card">
+    <div class="open-icon">📂</div>
+    <h2>子杰网站编辑器</h2>
+    <p>选择项目根目录（包含 <code>content/</code> 和 <code>.git/</code> 的目录）</p>
+    <button class="btn btn-primary" onclick="openFolder()">打开文件夹</button>
+    <p style="font-size:12px;color:var(--text-light)">需要 Chrome 或 Edge 浏览器</p>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo">
+      <button class="btn-icon mobile-only" onclick="toggleSidebar()">☰</button>
+      <span>🎨 子杰网站编辑器</span>
+    </div>
+    <div class="actions">
+      <button class="btn-icon" id="btn-theme" onclick="toggleTheme()" title="切换主题">🌙</button>
+      <button class="btn btn-sm" id="btn-revert" onclick="revertToSaved()" disabled title="恢复到上次保存的版本">↩ 恢复</button>
+      <button class="btn" id="btn-save" onclick="save()" disabled>💾 保存</button>
+      <button class="btn" id="btn-preview" onclick="preview()" disabled>👁 预览</button>
+      <button class="btn btn-primary" id="btn-git" onclick="showGitModal()" disabled>⬆ 提交推送</button>
+    </div>
+  </header>
+
+  <aside id="sidebar">
+    <div class="search">
+      <input type="text" id="search" placeholder="搜索文件名..." oninput="onSearchInput()">
+      <button class="search-toggle" id="search-toggle" onclick="toggleSearchMode()" title="切换全文搜索">📁</button>
+    </div>
+    <div class="file-tree" id="file-tree"></div>
+    <div class="new-btn"><button onclick="showNewModal()">+ 新建页面</button></div>
+  </aside>
+
+  <main>
+    <div class="tabs" id="tabs" style="display:none">
+      <button class="tab active" data-tab="edit" onclick="switchTab('edit')">📝 编辑</button>
+      <button class="tab" data-tab="label" onclick="switchTab('label')">🏷️ 展签</button>
+      <button class="tab" data-tab="raw" onclick="switchTab('raw')">&lt;/&gt; 源码</button>
+      <button class="tab" data-tab="preview" onclick="switchTab('preview')">👁 预览</button>
+    </div>
+    <div class="tab-content" id="tab-content">
+      <div class="empty"><div class="icon">📝</div><div>从左侧选择文件开始编辑</div></div>
+    </div>
+    <div class="status-bar" id="status-bar" style="display:none">
+      <span id="status-path"></span>
+      <span id="status-modified"></span>
+      <span id="status-branch"></span>
+      <span class="status-words" id="status-words"></span>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="modal-new">
+  <div class="modal">
+    <h3>新建页面</h3>
+    <div class="form-group">
+      <label>文件夹</label>
+      <select id="new-folder"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>年份（2位）</label>
+        <input type="text" id="new-year" value="26" maxlength="2" oninput="updateNewFilename()">
+      </div>
+      <div class="form-group">
+        <label>日期</label>
+        <input type="date" id="new-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>中文标题</label>
+      <input type="text" id="new-title-zh" placeholder="如：新作品" oninput="updateNewFilename()">
+    </div>
+    <div class="form-group">
+      <label>英文标题（可选）</label>
+      <input type="text" id="new-title-en" placeholder="如：New Work">
+    </div>
+    <div class="form-group">
+      <label>文件名预览</label>
+      <div class="filename-preview" id="new-filename">26新作品.md</div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="hideModal('modal-new')">取消</button>
+      <button class="btn btn-primary" onclick="createFile()">创建</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-git">
+  <div class="modal">
+    <h3>提交并推送</h3>
+    <div class="form-group">
+      <label>提交信息</label>
+      <input type="text" id="git-message" placeholder="如：更新作品页面" value="更新内容">
+    </div>
+    <div class="form-group">
+      <label>变更文件</label>
+      <div id="git-status-text" style="background:var(--sidebar-bg);padding:12px;border-radius:4px;font-size:12px;max-height:200px;overflow-y:auto;min-height:40px;display:flex;align-items:center">
+        <span style="color:var(--text-light)">加载中...</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>GitHub Token <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="font-size:12px">创建 Fine-grained Token ↗</a></label>
+      <input type="password" id="git-token" placeholder="ghp_xxxxxxxxxxxx（推送需要，留空则仅提交）">
+      <label style="display:flex;align-items:center;gap:4px;margin-top:6px;font-weight:400;font-size:12px;color:var(--text-light);cursor:pointer">
+        <input type="checkbox" id="git-remember" style="width:auto"> 记住 Token（明文存于浏览器，仅本地）
+      </label>
+      <div class="hint">建议 Fine-grained Token，仅授权此仓库的 Contents 读写</div>
+    </div>
+    <div class="form-group">
+      <label>CORS 代理 <span id="git-proxy-clear" onclick="clearStoredToken()" style="font-size:12px;color:var(--danger);cursor:pointer;display:none">清除已保存 Token</span></label>
+      <input type="text" id="git-cors-proxy" placeholder="https://cors.isomorphic-git.org" style="font-size:12px">
+      <div class="hint">公共代理理论上可见 Token。自建更安全：<code>npx cors-proxy-server</code></div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="hideModal('modal-git')">取消</button>
+      <button class="btn" onclick="copyGitCommand()">📋 复制命令</button>
+      <button class="btn btn-primary" id="btn-git-push" onclick="gitCommitAndPush()">提交并推送</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-delete">
+  <div class="modal">
+    <h3>确认删除</h3>
+    <div class="form-group">
+      <p>确定要删除文件 <code id="delete-filename" style="color:var(--danger);font-weight:600"></code> 吗？</p>
+      <p style="color:var(--text-light);font-size:12px;margin-top:8px">此操作不可撤销，删除后需要手动从 Git 恢复。</p>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="hideModal('modal-delete')">取消</button>
+      <button class="btn btn-danger" onclick="confirmDeleteFile()">🗑 删除</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-rename">
+  <div class="modal">
+    <h3>重命名文件</h3>
+    <div class="form-group">
+      <label>新文件名</label>
+      <input type="text" id="rename-input" onkeydown="if(event.key==='Enter')confirmRenameFile()">
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="hideModal('modal-rename')">取消</button>
+      <button class="btn btn-primary" onclick="confirmRenameFile()">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="context-menu" id="context-menu">
+  <button onclick="renameFile()"><span>✏️</span> 重命名</button>
+  <button class="danger" onclick="deleteFile()"><span>🗑️</span> 删除</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+;(function(global){"use strict"
+
+const QUARTZ_URL = "http://localhost:8080"
+
+// ── IndexedDB 持久化目录句柄 ──
+const idb = {
+  _db: null,
+  async _open() {
+    if (this._db) return this._db
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open("editor", 1)
+      req.onupgradeneeded = () => req.result.createObjectStore("kv")
+      req.onsuccess = () => { this._db = req.result; resolve(req.result) }
+      req.onerror = () => reject(req.error)
+    })
+  },
+  async get(key) {
+    const db = await this._open()
+    return new Promise((resolve, reject) => {
+      const req = db.transaction("kv").objectStore("kv").get(key)
+      req.onsuccess = () => resolve(req.result)
+      req.onerror = () => reject(req.error)
+    })
+  },
+  async set(key, value) {
+    const db = await this._open()
+    return new Promise((resolve, reject) => {
+      const req = db.transaction("kv", "readwrite").objectStore("kv").put(value, key)
+      req.onsuccess = () => resolve()
+      req.onerror = () => reject(req.error)
+    })
+  },
+}
+
+// ── File System Access API 封装 ──
+const fsys = {
+  rootDir: null,
+  contentDir: null,
+
+  async listMdFiles(dir, prefix = "") {
+    const files = []
+    for await (const [name, handle] of dir.entries()) {
+      if (name.startsWith(".")) continue
+      const p = prefix ? `${prefix}/${name}` : name
+      if (handle.kind === "directory") {
+        files.push(...await this.listMdFiles(handle, p))
+      } else if (name.endsWith(".md")) {
+        files.push(p)
+      }
+    }
+    return files
+  },
+
+  async listFolders(dir) {
+    const folders = []
+    for await (const [name, handle] of dir.entries()) {
+      if (handle.kind === "directory" && !name.startsWith(".")) folders.push(name)
+    }
+    return folders.sort()
+  },
+
+  async getFileHandle(path) {
+    const parts = path.split("/")
+    let dir = this.contentDir
+    for (let i = 0; i < parts.length - 1; i++) {
+      dir = await dir.getDirectoryHandle(parts[i])
+    }
+    return await dir.getFileHandle(parts[parts.length - 1])
+  },
+
+  async getDirHandle(path) {
+    if (!path) return this.contentDir
+    const parts = path.split("/").filter(Boolean)
+    let dir = this.contentDir
+    for (const part of parts) {
+      dir = await dir.getDirectoryHandle(part)
+    }
+    return dir
+  },
+
+  async readFile(path) {
+    const handle = await this.getFileHandle(path)
+    const file = await handle.getFile()
+    return await file.text()
+  },
+
+  async writeFile(path, content) {
+    const handle = await this.getFileHandle(path)
+    const writable = await handle.createWritable()
+    await writable.write(content)
+    await writable.close()
+  },
+
+  async createFile(dirPath, filename, content) {
+    const dir = dirPath ? await this.getDirHandle(dirPath) : this.contentDir
+    const handle = await dir.getFileHandle(filename, { create: true })
+    const writable = await handle.createWritable()
+    await writable.write(content)
+    await writable.close()
+  },
+
+  async deleteFile(path) {
+    const parts = path.split("/")
+    const filename = parts.pop()
+    const dir = parts.length > 0 ? await this.getDirHandle(parts.join("/")) : this.contentDir
+    await dir.removeEntry(filename)
+  },
+
+  async renameFile(oldPath, newName) {
+    const content = await this.readFile(oldPath)
+    const parts = oldPath.split("/")
+    parts[parts.length - 1] = newName
+    const newPath = parts.join("/")
+    const dirPath = parts.slice(0, -1).join("/")
+    await this.createFile(dirPath, newName, content)
+    await this.deleteFile(oldPath)
+    return newPath
+  },
+
+  async uploadImage(dirPath, filename, blob) {
+    const dir = dirPath ? await this.getDirHandle(dirPath) : this.contentDir
+    const handle = await dir.getFileHandle(filename, { create: true })
+    const writable = await handle.createWritable()
+    await writable.write(blob)
+    await writable.close()
+  },
+}
+
+// ── isomorphic-git fs 适配器（包装 File System Access API）──
+function createGitFs(rootHandle) {
+  async function resolveParts(path) {
+    return path.replace(/^\//, "").split("/").filter(Boolean)
+  }
+  async function getDir(path, create = false) {
+    const parts = await resolveParts(path)
+    let dir = rootHandle
+    for (const p of parts) { dir = await dir.getDirectoryHandle(p, { create }) }
+    return dir
+  }
+  return {
+    promises: {
+      async readFile(path) {
+        const parts = await resolveParts(path)
+        let dir = rootHandle
+        for (let i = 0; i < parts.length - 1; i++) { dir = await dir.getDirectoryHandle(parts[i]) }
+        const handle = await dir.getFileHandle(parts[parts.length - 1])
+        const file = await handle.getFile()
+        return new Uint8Array(await file.arrayBuffer())
+      },
+      async writeFile(path, content) {
+        const parts = await resolveParts(path)
+        const filename = parts.pop()
+        let dir = rootHandle
+        for (const p of parts) { dir = await dir.getDirectoryHandle(p, { create: true }) }
+        const handle = await dir.getFileHandle(filename, { create: true })
+        const writable = await handle.createWritable()
+        await writable.write(content)
+        await writable.close()
+      },
+      async readdir(path) {
+        const dir = path === "/" ? rootHandle : await getDir(path)
+        const entries = []
+        for await (const [name] of dir.entries()) { entries.push(name) }
+        return entries
+      },
+      async mkdir(path) { await getDir(path, true) },
+      async rmdir(path) {
+        const parts = await resolveParts(path)
+        const name = parts.pop()
+        let dir = rootHandle
+        for (const p of parts) { dir = await dir.getDirectoryHandle(p) }
+        await dir.removeEntry(name, { recursive: true })
+      },
+      async unlink(path) {
+        const parts = await resolveParts(path)
+        const name = parts.pop()
+        let dir = rootHandle
+        for (const p of parts) { dir = await dir.getDirectoryHandle(p) }
+        await dir.removeEntry(name)
+      },
+      async stat(path) {
+        const parts = await resolveParts(path)
+        if (parts.length === 0) return { type: "dir", size: 0, mtimeMs: 0, isDirectory: () => true, isFile: () => false }
+        let dir = rootHandle
+        for (let i = 0; i < parts.length - 1; i++) { dir = await dir.getDirectoryHandle(parts[i]) }
+        const name = parts[parts.length - 1]
+        try {
+          const fh = await dir.getFileHandle(name)
+          const file = await fh.getFile()
+          return { type: "file", size: file.size, mtimeMs: file.lastModified, isDirectory: () => false, isFile: () => true }
+        } catch {
+          await dir.getDirectoryHandle(name)
+          return { type: "dir", size: 0, mtimeMs: 0, isDirectory: () => true, isFile: () => false }
+        }
+      },
+      async lstat(path) { return this.stat(path) },
+      async readlink() { throw new Error("ENOSYS") },
+      async symlink() { throw new Error("ENOSYS") },
+    }
+  }
+}
+
+// ── 状态 ──
+const S = {
+  files: [],
+  folders: [],
+  allTags: [],
+  currentPath: null,
+  rawContent: "",
+  fm: { title: "", titleZh: "", titleEn: "", date: "", tags: [] },
+  extraFm: "",
+  body: "",
+  hasLabel: false,
+  labelZh: "",
+  labelEn: "",
+  modified: false,
+  activeTab: "edit",
+  searchQuery: "",
+  searchMode: "filename",
+  collapsedFolders: new Set(),
+  cursorPos: {},
+  contextFile: null,
+}
+
+// ── debounce ──
+function debounce(fn, ms) {
+  let t
+  return function(...args) {
+    clearTimeout(t)
+    t = setTimeout(() => fn.apply(this, args), ms)
+  }
+}
+
+// ── LocalStorage 草稿 ──
+function draftKey(path) { return `draft:${path}` }
+function saveDraft() {
+  if (!S.currentPath) return
+  const draft = { fm: S.fm, extraFm: S.extraFm, body: S.body, labelZh: S.labelZh, labelEn: S.labelEn, hasLabel: S.hasLabel, timestamp: Date.now() }
+  try { localStorage.setItem(draftKey(S.currentPath), JSON.stringify(draft)) } catch {}
+}
+function loadDraft(path) {
+  try { const raw = localStorage.getItem(draftKey(path)); return raw ? JSON.parse(raw) : null } catch { return null }
+}
+function clearDraft(path) {
+  try { localStorage.removeItem(draftKey(path || S.currentPath)) } catch {}
+}
+
+// ── 权限验证 ──
+async function verifyPermission(handle) {
+  const opts = { mode: "readwrite" }
+  if ((await handle.queryPermission(opts)) === "granted") return true
+  if ((await handle.requestPermission(opts)) === "granted") return true
+  return false
+}
+
+// ── 初始化 ──
+async function init() {
+  const savedTheme = localStorage.getItem("editor-theme") || "light"
+  document.documentElement.setAttribute("data-theme", savedTheme)
+  document.getElementById("btn-theme").textContent = savedTheme === "dark" ? "☀️" : "🌙"
+
+  marked.setOptions({ breaks: true, gfm: true })
+  document.getElementById("new-date").value = new Date().toISOString().slice(0, 10)
+
+  if (!("showDirectoryPicker" in global)) {
+    document.getElementById("open-overlay").innerHTML =
+      `<div class="open-card"><div class="open-icon">⚠️</div><h2>浏览器不支持</h2><p>本编辑器需要 Chrome 或 Edge 浏览器</p></div>`
+    return
+  }
+
+  const stored = await idb.get("rootDir")
+  if (stored) {
+    try {
+      const granted = await verifyPermission(stored)
+      if (granted) {
+        fsys.rootDir = stored
+        try { fsys.contentDir = await stored.getDirectoryHandle("content") }
+        catch { toast("未找到 content/ 目录，请选择项目根目录", "error"); return }
+        await loadEditor()
+        return
+      }
+    } catch {}
+  }
+  document.getElementById("open-overlay").classList.remove("hidden")
+}
+
+async function openFolder() {
+  try {
+    const handle = await global.showDirectoryPicker()
+    const granted = await verifyPermission(handle)
+    if (!granted) { toast("需要读写权限", "error"); return }
+    fsys.rootDir = handle
+    try { fsys.contentDir = await handle.getDirectoryHandle("content") }
+    catch { toast("未找到 content/ 目录，请选择项目根目录", "error"); return }
+    await idb.set("rootDir", handle)
+    await loadEditor()
+  } catch (e) {
+    if (e.name !== "AbortError") toast("打开文件夹失败: " + e.message, "error")
+  }
+}
+
+async function loadEditor() {
+  document.getElementById("open-overlay").classList.add("hidden")
+  try {
+    await loadFiles()
+    await loadFolders()
+    await loadTags()
+    renderFileTree()
+  } catch (e) {
+    toast("加载失败: " + e.message, "error")
+  }
+}
+
+async function loadFiles() {
+  S.files = await fsys.listMdFiles(fsys.contentDir)
+}
+async function loadFolders() {
+  S.folders = await fsys.listFolders(fsys.contentDir)
+  const sel = document.getElementById("new-folder")
+  sel.innerHTML = S.folders.map((f) => `<option value="${escAttr(f)}">${esc(f)}</option>`).join("")
+}
+async function loadTags() {
+  const tags = new Map()
+  for (const f of S.files) {
+    try {
+      const raw = await fsys.readFile(f)
+      const fm = raw.match(/^---\n([\s\S]*?)\n---/)
+      if (!fm) continue
+      const tagBlock = fm[1].match(/^tags:\s*\n((?:[ \t]+-[ \t]+.+\n?)+)/m)
+      if (tagBlock) {
+        for (const line of tagBlock[1].split("\n")) {
+          const m = line.match(/-[ \t]+(.+)/)
+          if (m) { const t = m[1].trim(); tags.set(t, (tags.get(t) || 0) + 1) }
+        }
+      }
+    } catch {}
+  }
+  S.allTags = [...tags.entries()].sort((a, b) => b[1] - a[1])
+}
+
+// ── 文件树渲染 ──
+function renderFileTree() {
+  S.searchQuery = document.getElementById("search").value.toLowerCase()
+  const tree = document.getElementById("file-tree")
+  const groups = {}
+  for (const f of S.files) {
+    const topFolder = f.split("/")[0]
+    if (!groups[topFolder]) groups[topFolder] = []
+    const displayName = f.replace(/\.md$/, "").split("/").pop()
+    if (S.searchQuery && !displayName.toLowerCase().includes(S.searchQuery)) continue
+    groups[topFolder].push(f)
+  }
+  let html = ""
+  for (const folder of Object.keys(groups).sort()) {
+    const isCollapsed = S.collapsedFolders.has(folder)
+    const files = groups[folder]
+    html += `<div class="folder-item ${isCollapsed ? "collapsed" : ""}" onclick="toggleFolder('${escAttr(folder)}')"><span class="arrow">▼</span><span>${esc(folder)}</span><span class="count">${files.length}</span></div>`
+    if (!isCollapsed) {
+      html += `<div class="file-list">`
+      for (const f of files) {
+        const name = f.replace(/\.md$/, "").split("/").pop()
+        const active = f === S.currentPath ? "active" : ""
+        const safePath = escAttr(f)
+        html += `<div class="file-item ${active}" onclick="selectFile('${safePath}')" oncontextmenu="showFileMenu(event,'${safePath}')" title="${escAttr(f)}"><span class="dot"></span><span>${esc(name)}</span><span class="file-actions"><button onclick="event.stopPropagation();showFileMenu(event,'${safePath}')" title="更多">⋯</button></span></div>`
+      }
+      html += `</div>`
+    }
+  }
+  if (!html) html = `<div style="padding:20px;color:var(--text-light);font-size:13px;text-align:center">未找到匹配文件</div>`
+  tree.innerHTML = html
+}
+
+function toggleSearchMode() {
+  S.searchMode = S.searchMode === "filename" ? "content" : "filename"
+  const btn = document.getElementById("search-toggle")
+  const input = document.getElementById("search")
+  if (S.searchMode === "content") {
+    btn.classList.add("active"); btn.textContent = "🔍"; btn.title = "全文搜索中（点击切回文件名搜索）"; input.placeholder = "搜索文件内容..."
+  } else {
+    btn.classList.remove("active"); btn.textContent = "📁"; btn.title = "切换全文搜索"; input.placeholder = "搜索文件名..."
+  }
+  onSearchInput()
+}
+
+const debouncedContentSearch = debounce(async () => {
+  const q = document.getElementById("search").value.trim()
+  if (!q) { renderFileTree(); return }
+  const ql = q.toLowerCase()
+  const results = []
+  for (const f of S.files) {
+    try { const c = await fsys.readFile(f); if (c.toLowerCase().includes(ql)) results.push(f) } catch {}
+  }
+  const tree = document.getElementById("file-tree")
+  if (!results.length) { tree.innerHTML = `<div style="padding:20px;color:var(--text-light);font-size:13px;text-align:center">未找到匹配文件</div>`; return }
+  const groups = {}
+  for (const f of results) { const top = f.split("/")[0]; if (!groups[top]) groups[top] = []; groups[top].push(f) }
+  let html = ""
+  for (const folder of Object.keys(groups).sort()) {
+    html += `<div class="folder-item collapsed"><span class="arrow">▼</span><span>${esc(folder)}</span><span class="count">${groups[folder].length}</span></div><div class="file-list">`
+    for (const f of groups[folder]) {
+      const name = f.replace(/\.md$/, "").split("/").pop()
+      const active = f === S.currentPath ? "active" : ""
+      const safePath = escAttr(f)
+      html += `<div class="file-item ${active}" onclick="selectFile('${safePath}')" oncontextmenu="showFileMenu(event,'${safePath}')" title="${escAttr(f)}"><span class="dot"></span><span>${esc(name)}</span></div>`
+    }
+    html += `</div>`
+  }
+  tree.innerHTML = html
+}, 300)
+
+function onSearchInput() {
+  if (S.searchMode === "content") debouncedContentSearch()
+  else renderFileTree()
+}
+
+function toggleFolder(folder) {
+  if (S.collapsedFolders.has(folder)) S.collapsedFolders.delete(folder)
+  else S.collapsedFolders.add(folder)
+  renderFileTree()
+}
+
+// ── 文件选择与解析 ──
+async function selectFile(filePath) {
+  if (S.modified && !confirm("有未保存的更改，是否切换文件？")) return
+  S.currentPath = filePath
+  let content
+  try { content = await fsys.readFile(filePath) }
+  catch (e) { toast("读取失败: " + e.message, "error"); return }
+
+  S.rawContent = content
+  parseContent(content)
+  S.modified = false
+  S.activeTab = "edit"
+  S.cursorPos = {}
+
+  const draft = loadDraft(S.currentPath)
+  if (draft) {
+    const age = Math.round((Date.now() - draft.timestamp) / 1000 / 60)
+    if (confirm(`发现 ${age} 分钟前的未保存草稿，是否恢复？`)) {
+      S.fm = draft.fm || S.fm; S.extraFm = draft.extraFm || ""
+      S.body = draft.body ?? S.body; S.labelZh = draft.labelZh ?? ""; S.labelEn = draft.labelEn ?? ""
+      S.hasLabel = draft.hasLabel ?? false; S.modified = true
+    } else { clearDraft(S.currentPath) }
+  }
+
+  document.getElementById("tabs").style.display = "flex"
+  document.getElementById("status-bar").style.display = "flex"
+  document.getElementById("btn-save").disabled = true
+  document.getElementById("btn-save").textContent = "💾 保存"
+  document.getElementById("btn-preview").disabled = false
+  document.getElementById("btn-git").disabled = false
+  document.getElementById("btn-revert").disabled = true
+  updateStatusBar()
+  updateWordCount()
+  renderFileTree()
+  renderTab()
+}
+
+function parseContent(raw) {
+  const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?/)
+  if (fmMatch) { parseFrontmatter(fmMatch[1]); S.body = raw.substring(fmMatch[0].length) }
+  else { S.fm = { title: "", titleZh: "", titleEn: "", date: "", tags: [] }; S.extraFm = ""; S.body = raw }
+  const labelMatch = S.body.match(/<div class="label-cols">\s*<div>([\s\S]*?)<\/div>\s*<div>([\s\S]*?)<\/div>\s*<\/div>/)
+  if (labelMatch) {
+    S.hasLabel = true; S.labelZh = labelMatch[1].trim(); S.labelEn = labelMatch[2].trim()
+    S.body = S.body.substring(0, labelMatch.index).trim()
+  } else { S.hasLabel = false; S.labelZh = ""; S.labelEn = "" }
+}
+
+function parseFrontmatter(text) {
+  S.fm = { title: "", titleZh: "", titleEn: "", date: "", tags: [] }
+  S.extraFm = ""
+  const lines = text.split("\n")
+  let inTags = false
+  let extraLines = []
+  for (const line of lines) {
+    if (line.match(/^\s+-\s+/) && inTags) { S.fm.tags.push(line.replace(/^\s+-\s+/, "").trim()); continue }
+    inTags = false
+    const m = line.match(/^(\w+):\s*(.*)$/)
+    if (m) {
+      const [, key, val] = m
+      if (key === "title") {
+        S.fm.title = val
+        const idx = val.indexOf("/")
+        if (idx >= 0) { S.fm.titleZh = val.substring(0, idx).trim(); S.fm.titleEn = val.substring(idx + 1).trim() }
+        else { S.fm.titleZh = val }
+      } else if (key === "date") { S.fm.date = val }
+      else if (key === "tags") {
+        inTags = true
+        if (val.trim()) { S.fm.tags = val.replace(/[\[\]]/g, "").split(",").map((t) => t.trim()).filter(Boolean); inTags = false }
+      } else { extraLines.push(line) }
+    } else if (line.trim()) { extraLines.push(line) }
+  }
+  S.extraFm = extraLines.join("\n")
+}
+
+function serializeContent() {
+  const title = S.fm.titleEn ? `${S.fm.titleZh}/ ${S.fm.titleEn}` : S.fm.titleZh
+  let fm = "---\n"
+  fm += `title: ${title}\n`
+  if (S.fm.date) fm += `date: ${S.fm.date}\n`
+  if (S.fm.tags.length > 0) { fm += "tags:\n"; for (const t of S.fm.tags) fm += `  - ${t}\n` }
+  if (S.extraFm) fm += S.extraFm + "\n"
+  fm += "---\n\n"
+  let result = fm + S.body
+  if (S.labelZh.trim() || S.labelEn.trim()) {
+    result += `\n\n<div class="label-cols">\n<div>\n\n${S.labelZh.trim()}\n\n</div>\n<div>\n\n${S.labelEn.trim()}\n\n</div>\n</div>`
+  }
+  return result
+}
+
+// ── Tab 渲染 ──
+function switchTab(tab) {
+  if (S.activeTab === tab) return
+  const activeEl = document.activeElement
+  if (activeEl && activeEl.tagName === "TEXTAREA") {
+    S.cursorPos[S.activeTab] = { start: activeEl.selectionStart, end: activeEl.selectionEnd }
+  }
+  if (S.activeTab === "edit") syncBodyFromTextarea()
+  if (S.activeTab === "label") syncLabelFromTextarea()
+  if (S.activeTab === "raw") syncRawFromTextarea()
+  S.activeTab = tab
+  renderTab()
+  if (S.cursorPos[tab]) {
+    const ta = document.querySelector("#tab-content textarea")
+    if (ta) { ta.focus(); ta.setSelectionRange(S.cursorPos[tab].start, S.cursorPos[tab].end) }
+  }
+}
+
+function renderTab() {
+  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === S.activeTab))
+  const c = document.getElementById("tab-content")
+  switch (S.activeTab) {
+    case "edit":
+      c.innerHTML = renderEditTab()
+      setupBodyEditor()
+      updateBodyPreview()
+      break
+    case "label":
+      c.innerHTML = renderLabelTab()
+      updateLabelPreview()
+      break
+    case "raw": c.innerHTML = renderRawTab(); break
+    case "preview": c.innerHTML = renderPreviewTab(); break
+  }
+}
+
+function renderEditTab() {
+  const tagChips = S.fm.tags.map((t, i) => `<span class="tag-chip">${esc(t)}<span class="remove" onclick="removeTag(${i})">×</span></span>`).join("")
+  const datalist = S.allTags.map(([t]) => `<option value="${escAttr(t)}">`).join("")
+  return `
+    <div class="form-inline">
+      <label>中文</label>
+      <input type="text" value="${escAttr(S.fm.titleZh)}" oninput="S.fm.titleZh=this.value;markModified()" placeholder="中文标题">
+      <label>英文</label>
+      <input type="text" value="${escAttr(S.fm.titleEn)}" oninput="S.fm.titleEn=this.value;markModified()" placeholder="English Title">
+      <label>日期</label>
+      <input type="date" value="${escAttr(S.fm.date)}" oninput="S.fm.date=this.value;markModified()">
+    </div>
+    <div class="form-inline">
+      <label>标签</label>
+      <div class="tag-input" id="tag-input">
+        ${tagChips}
+        <input type="text" id="tag-field" placeholder="回车添加..." list="tag-list"
+          onkeydown="if(event.key==='Enter'||event.key===','){event.preventDefault();addTag(this.value);this.value=''}"
+          onblur="if(this.value.trim()){addTag(this.value);this.value=''}">
+        <datalist id="tag-list">${datalist}</datalist>
+      </div>
+    </div>
+    ${S.extraFm ? `<div class="form-group"><label>额外 Frontmatter 字段</label><pre style="background:var(--sidebar-bg);padding:12px;border-radius:4px;font-size:12px;white-space:pre-wrap">${esc(S.extraFm)}</pre></div>` : ""}
+    <div class="edit-divider"></div>
+    <div class="md-editor">
+      <div class="md-editor-left" id="md-editor-left">
+        <div class="md-toolbar">
+          <button onclick="insertMarkdown('h1')" title="一级标题">H1</button>
+          <button onclick="insertMarkdown('h2')" title="二级标题">H2</button>
+          <button onclick="insertMarkdown('h3')" title="三级标题">H3</button>
+          <span class="divider"></span>
+          <button onclick="insertMarkdown('bold')" title="粗体" style="font-weight:700">B</button>
+          <button onclick="insertMarkdown('italic')" title="斜体" style="font-style:italic">I</button>
+          <button onclick="insertMarkdown('strike')" title="删除线" style="text-decoration:line-through">S</button>
+          <span class="divider"></span>
+          <button onclick="insertMarkdown('link')" title="链接">🔗</button>
+          <button onclick="insertMarkdown('image')" title="图片">🖼</button>
+          <span class="divider"></span>
+          <button onclick="insertMarkdown('quote')" title="引用">❝</button>
+          <button onclick="insertMarkdown('ul')" title="无序列表">•</button>
+          <button onclick="insertMarkdown('ol')" title="有序列表">1.</button>
+          <button onclick="insertMarkdown('code')" title="行内代码">&lt;/&gt;</button>
+          <button onclick="insertMarkdown('codeblock')" title="代码块">{ }</button>
+          <button onclick="insertMarkdown('hr')" title="分隔线">―</button>
+        </div>
+        <textarea id="body-textarea" oninput="markModified()" placeholder="Markdown 正文...（可拖拽图片上传）">${esc(S.body)}</textarea>
+      </div>
+      <div class="md-preview" id="body-preview"></div>
+    </div>
+  `
+}
+
+function renderLabelTab() {
+  return `
+    <div class="label-editor">
+      <div class="label-col">
+        <h4>🇨🇳 中文展签</h4>
+        <textarea id="label-zh" oninput="markModified();updateLabelPreview()" placeholder="展览标签中文内容...">${esc(S.labelZh)}</textarea>
+        <div class="label-preview" id="label-preview-zh"></div>
+      </div>
+      <div class="label-col">
+        <h4>🇬🇧 English Label</h4>
+        <textarea id="label-en" oninput="markModified();updateLabelPreview()" placeholder="Exhibition label English content...">${esc(S.labelEn)}</textarea>
+        <div class="label-preview" id="label-preview-en"></div>
+      </div>
+    </div>
+  `
+}
+
+function renderRawTab() {
+  return `<textarea class="raw-view" id="raw-textarea" oninput="markModified()">${esc(serializeContent())}</textarea>`
+}
+
+function renderPreviewTab() {
+  const content = serializeContent()
+  const fmMatch = content.match(/^---\n[\s\S]*?\n---\n?/)
+  let body = fmMatch ? content.substring(fmMatch[0].length) : content
+  if (S.currentPath) {
+    const dir = S.currentPath.replace(/\/[^/]+$/, "")
+    body = body.replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (m, alt, p) => `![${alt}](${QUARTZ_URL}/${dir}/${p})`)
+  }
+  const html = marked.parse(body)
+  return `
+    <div class="full-preview">
+      <h1>${esc(S.fm.titleZh)}${S.fm.titleEn ? ` <small style="font-size:.6em;color:var(--text-light)">${esc(S.fm.titleEn)}</small>` : ""}</h1>
+      ${S.fm.date ? `<div style="color:var(--text-light);font-size:13px;margin-bottom:16px">${esc(S.fm.date)}</div>` : ""}
+      ${S.fm.tags.length ? `<div style="margin-bottom:16px">${S.fm.tags.map(t => `<span style="background:#fff236;color:#7a43b5;padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600;margin-right:4px">${esc(t)}</span>`).join("")}</div>` : ""}
+      ${html}
+    </div>
+  `
+}
+
+// ── Markdown 工具栏 ──
+function insertMarkdown(type) {
+  const ta = document.getElementById("body-textarea")
+  if (!ta) return
+  const start = ta.selectionStart, end = ta.selectionEnd, sel = ta.value.substring(start, end)
+  let before = "", after = "", replace = sel, newCursor = null
+  switch (type) {
+    case "h1": before = "# "; break
+    case "h2": before = "## "; break
+    case "h3": before = "### "; break
+    case "bold": before = "**"; after = "**"; replace = sel || "粗体文本"; break
+    case "italic": before = "*"; after = "*"; replace = sel || "斜体文本"; break
+    case "strike": before = "~~"; after = "~~"; replace = sel || "删除线文本"; break
+    case "link": before = "["; after = "](https://)"; replace = sel || "链接文字"; break
+    case "image": before = "!["; after = "](./)"; replace = sel || "图片描述"; break
+    case "quote": before = "> "; break
+    case "ul": before = "- "; break
+    case "ol": before = "1. "; break
+    case "code": before = "`"; after = "`"; replace = sel || "code"; break
+    case "codeblock": before = "\n\`\`\`\n"; after = "\n\`\`\`\n"; replace = sel || "代码块"; break
+    case "hr": before = "\n---\n"; break
+  }
+  const newText = before + replace + after
+  ta.value = ta.value.substring(0, start) + newText + ta.value.substring(end)
+  if (sel) { ta.selectionStart = start; ta.selectionEnd = start + newText.length }
+  else { const cp = start + before.length; ta.selectionStart = cp; ta.selectionEnd = cp + replace.length }
+  ta.focus()
+  S.body = ta.value
+  markModified()
+}
+
+// ── 拖拽图片上传 ──
+function setupBodyEditor() {
+  const left = document.getElementById("md-editor-left")
+  const ta = document.getElementById("body-textarea")
+  if (!left || !ta) return
+  left.addEventListener("dragover", (e) => { e.preventDefault(); left.classList.add("dragover") })
+  left.addEventListener("dragleave", () => { left.classList.remove("dragover") })
+  left.addEventListener("drop", async (e) => {
+    e.preventDefault()
+    left.classList.remove("dragover")
+    const files = e.dataTransfer.files
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) continue
+      const folder = S.currentPath.replace(/\/[^/]+$/, "")
+      try { await fsys.uploadImage(folder, file.name, file) }
+      catch (err) { toast("上传失败: " + err.message, "error"); continue }
+      const start = ta.selectionStart, end = ta.selectionEnd
+      const md = `![${file.name.replace(/\.[^.]+$/, "")}](./${file.name})`
+      ta.value = ta.value.substring(0, start) + md + ta.value.substring(end)
+      ta.selectionStart = ta.selectionEnd = start + md.length
+      ta.focus()
+      S.body = ta.value
+      markModified()
+      toast(`已上传: ${file.name}`, "success")
+    }
+  })
+}
+
+// ── 右键菜单 / 删除 / 重命名 ──
+function showFileMenu(event, filePath) {
+  event.preventDefault(); event.stopPropagation()
+  S.contextFile = filePath
+  const menu = document.getElementById("context-menu")
+  menu.classList.add("show")
+  menu.style.left = Math.min(event.clientX, window.innerWidth - 160) + "px"
+  menu.style.top = Math.min(event.clientY, window.innerHeight - 100) + "px"
+}
+function hideFileMenu() { document.getElementById("context-menu").classList.remove("show") }
+function deleteFile() {
+  hideFileMenu()
+  if (!S.contextFile) return
+  const name = S.contextFile.replace(/\.md$/, "").split("/").pop()
+  document.getElementById("delete-filename").textContent = name
+  showModal("modal-delete")
+}
+async function confirmDeleteFile() {
+  if (!S.contextFile) return
+  try { await fsys.deleteFile(S.contextFile) }
+  catch (e) { toast("删除失败: " + e.message, "error"); return }
+  if (S.currentPath === S.contextFile) {
+    S.currentPath = null; S.modified = false
+    document.getElementById("tabs").style.display = "none"
+    document.getElementById("status-bar").style.display = "none"
+    document.getElementById("btn-save").disabled = true
+    document.getElementById("btn-preview").disabled = true
+    document.getElementById("btn-git").disabled = true
+    document.getElementById("btn-revert").disabled = true
+    document.getElementById("tab-content").innerHTML = `<div class="empty"><div class="icon">📝</div><div>从左侧选择文件开始编辑</div></div>`
+  }
+  clearDraft(S.contextFile)
+  await loadFiles()
+  renderFileTree()
+  hideModal("modal-delete")
+  toast("文件已删除", "success")
+}
+function renameFile() {
+  hideFileMenu()
+  if (!S.contextFile) return
+  const oldName = S.contextFile.split("/").pop()
+  const input = document.getElementById("rename-input")
+  input.value = oldName
+  showModal("modal-rename")
+  setTimeout(() => { input.focus(); input.select() }, 100)
+}
+async function confirmRenameFile() {
+  if (!S.contextFile) return
+  const newName = document.getElementById("rename-input").value.trim()
+  if (!newName) { toast("请输入新文件名", "error"); return }
+  if (newName === S.contextFile.split("/").pop()) { hideModal("modal-rename"); return }
+  try {
+    const newPath = await fsys.renameFile(S.contextFile, newName)
+    if (S.currentPath === S.contextFile) { S.currentPath = newPath; updateStatusBar() }
+  } catch (e) { toast("重命名失败: " + e.message, "error"); return }
+  await loadFiles()
+  renderFileTree()
+  hideModal("modal-rename")
+  toast("文件已重命名", "success")
+}
+
+// ── 内容同步 ──
+function syncBodyFromTextarea() {
+  const ta = document.getElementById("body-textarea")
+  if (ta) { S.body = ta.value; updateBodyPreview() }
+}
+function syncLabelFromTextarea() {
+  const zh = document.getElementById("label-zh"), en = document.getElementById("label-en")
+  if (zh) S.labelZh = zh.value
+  if (en) S.labelEn = en.value
+}
+function syncRawFromTextarea() {
+  const ta = document.getElementById("raw-textarea")
+  if (ta) parseContent(ta.value)
+}
+
+const updateBodyPreview = debounce(function() {
+  const ta = document.getElementById("body-textarea"), pv = document.getElementById("body-preview")
+  if (!ta || !pv) return
+  let md = ta.value
+  if (S.currentPath) {
+    const dir = S.currentPath.replace(/\/[^/]+$/, "")
+    md = md.replace(/!\[([^\]]*)\]\(\.\/([^)]+)\)/g, (m, alt, p) => `![${alt}](${QUARTZ_URL}/${dir}/${p})`)
+  }
+  pv.innerHTML = marked.parse(md)
+}, 150)
+
+function updateLabelPreview() {
+  const zh = document.getElementById("label-zh"), en = document.getElementById("label-en")
+  const pzh = document.getElementById("label-preview-zh"), pen = document.getElementById("label-preview-en")
+  if (zh && pzh) pzh.innerHTML = marked.parse(zh.value || "")
+  if (en && pen) pen.innerHTML = marked.parse(en.value || "")
+}
+
+// ── 标签管理 ──
+function addTag(value) {
+  const t = value.trim()
+  if (!t || S.fm.tags.includes(t)) return
+  S.fm.tags.push(t)
+  markModified()
+  renderTab()
+}
+function removeTag(index) { S.fm.tags.splice(index, 1); markModified(); renderTab() }
+
+// ── 修改标记 + 草稿 ──
+function markModified() {
+  S.modified = true
+  document.getElementById("btn-save").disabled = false
+  document.getElementById("btn-save").textContent = "💾 保存 *"
+  document.getElementById("btn-revert").disabled = false
+  updateStatusBar()
+  if (S.activeTab === "edit") { const ta = document.getElementById("body-textarea"); if (ta) S.body = ta.value }
+  if (S.activeTab === "label") syncLabelFromTextarea()
+  saveDraft()
+  if (S.activeTab === "edit") updateBodyPreview()
+  updateWordCount()
+}
+
+function updateStatusBar() {
+  document.getElementById("status-path").textContent = S.currentPath || ""
+  document.getElementById("status-modified").innerHTML = S.modified
+    ? '<span style="color:var(--warn)">● 未保存</span>'
+    : '<span style="color:var(--success)">● 已保存</span>'
+}
+
+function updateWordCount() {
+  const text = S.body || ""
+  const cn = (text.match(/[\u4e00-\u9fff]/g) || []).length
+  const en = (text.replace(/[\u4e00-\u9fff]/g, " ").match(/[a-zA-Z0-9]+/g) || []).length
+  document.getElementById("status-words").textContent = (cn + en) > 0 ? `${cn + en} 字` : ""
+}
+
+// ── 恢复 ──
+function revertToSaved() {
+  if (!S.currentPath) return
+  if (!confirm("确定要恢复到上次保存的版本？当前未保存的更改将丢失。")) return
+  parseContent(S.rawContent)
+  S.modified = false
+  clearDraft()
+  document.getElementById("btn-save").disabled = true
+  document.getElementById("btn-save").textContent = "💾 保存"
+  document.getElementById("btn-revert").disabled = true
+  updateStatusBar()
+  updateWordCount()
+  renderTab()
+  toast("已恢复到上次保存的版本", "info")
+}
+
+// ── 保存 ──
+async function save() {
+  if (!S.currentPath) return
+  if (S.activeTab === "edit") syncBodyFromTextarea()
+  if (S.activeTab === "label") syncLabelFromTextarea()
+  if (S.activeTab === "raw") syncRawFromTextarea()
+  const content = serializeContent()
+  try { await fsys.writeFile(S.currentPath, content) }
+  catch (e) { toast("保存失败: " + e.message, "error"); return }
+  S.modified = false
+  S.rawContent = content
+  clearDraft()
+  document.getElementById("btn-save").disabled = true
+  document.getElementById("btn-save").textContent = "💾 保存"
+  document.getElementById("btn-revert").disabled = true
+  updateStatusBar()
+  toast("保存成功", "success")
+}
+
+// ── 预览 ──
+async function preview() {
+  if (!S.currentPath) return
+  if (S.modified) await save()
+  let slug = S.currentPath.replace(/\.md$/, "")
+  if (slug === "index") { window.open(`${QUARTZ_URL}/`, "_blank") }
+  else { const segs = slug.split("/").map((s) => encodeURIComponent(s)); window.open(`${QUARTZ_URL}/${segs.join("/")}`, "_blank") }
+  toast("已打开预览（需要先运行 npm run docs）", "info")
+}
+
+// ── 新建文件 ──
+function showNewModal() {
+  document.getElementById("new-title-zh").value = ""
+  document.getElementById("new-title-en").value = ""
+  document.getElementById("new-year").value = String(new Date().getFullYear()).slice(2)
+  updateNewFilename()
+  showModal("modal-new")
+}
+function updateNewFilename() {
+  const year = document.getElementById("new-year").value || "26"
+  const zh = document.getElementById("new-title-zh").value || "新作品"
+  document.getElementById("new-filename").textContent = `${year}${zh}.md`
+}
+async function createFile() {
+  const folder = document.getElementById("new-folder").value
+  const year = document.getElementById("new-year").value || "26"
+  const zh = document.getElementById("new-title-zh").value.trim()
+  const en = document.getElementById("new-title-en").value.trim()
+  const date = document.getElementById("new-date").value || new Date().toISOString().slice(0, 10)
+  if (!zh) { toast("请输入中文标题", "error"); return }
+  const filename = `${year}${zh}.md`
+  const title = en ? `${zh}/ ${en}` : zh
+  const defaultTag = folder.replace(/^\d{2}/, "")
+  const content = `---\ntitle: ${title}\ndate: ${date}\ntags:\n  - ${defaultTag}\n---\n\n`
+  try { await fsys.createFile(folder, filename, content) }
+  catch (e) { toast("创建失败: " + e.message, "error"); return }
+  await loadFiles()
+  renderFileTree()
+  hideModal("modal-new")
+  toast("文件已创建", "success")
+  await selectFile(`${folder}/${filename}`)
+}
+
+// ── Git（isomorphic-git + 剪贴板兜底）──
+async function showGitModal() {
+  if (S.modified) { toast("请先保存文件", "info"); return }
+  const remember = localStorage.getItem("git-remember") === "true"
+  document.getElementById("git-remember").checked = remember
+  document.getElementById("git-token").value = remember ? (localStorage.getItem("git-token") || "") : ""
+  const savedProxy = localStorage.getItem("git-cors-proxy") || ""
+  document.getElementById("git-cors-proxy").value = savedProxy
+  const hasToken = !!localStorage.getItem("git-token")
+  document.getElementById("git-proxy-clear").style.display = hasToken ? "inline" : "none"
+  showModal("modal-git")
+  try {
+    await refreshGitStatus()
+  } catch (e) {
+    document.getElementById("git-status-text").innerHTML =
+      `<span style="color:var(--text-light)">Git 状态不可用：${esc(e.message)}。可使用剪贴板模式。</span>`
+  }
+}
+
+async function refreshGitStatus() {
+  if (!global.git) { throw new Error("isomorphic-git 未加载") }
+  const fs = createGitFs(fsys.rootDir)
+  const dir = "/"
+  const matrix = await global.git.statusMatrix({ fs, dir, filter: (f) => f.startsWith("content/") })
+  let html = ""
+  for (const [filepath, head, workdir, stage] of matrix) {
+    if (head === workdir && stage === workdir) continue
+    let cls = "untracked", label = "??"
+    if (head === 0 && workdir === 2) { cls = "added"; label = "ADD" }
+    else if (head === 2 && workdir === 0) { cls = "deleted"; label = "DEL" }
+    else { cls = "modified"; label = "MOD" }
+    html += `<div class="git-status-line"><span class="badge ${cls}">${label}</span>${esc(filepath)}</div>`
+  }
+  const el = document.getElementById("git-status-text")
+  if (!html) {
+    el.innerHTML = `<span style="color:var(--text-light)">（无变更）</span>`
+  } else {
+    el.innerHTML = html
+    el.style.display = "block"
+    el.style.alignItems = "flex-start"
+  }
+}
+
+async function gitCommitAndPush() {
+  const btn = document.getElementById("btn-git-push")
+  const msg = document.getElementById("git-message").value.trim() || "更新内容"
+  const token = document.getElementById("git-token").value.trim()
+  const remember = document.getElementById("git-remember").checked
+  const proxy = document.getElementById("git-cors-proxy").value.trim() || "https://cors.isomorphic-git.org"
+
+  localStorage.setItem("git-remember", remember ? "true" : "false")
+  if (remember && token) { localStorage.setItem("git-token", token) }
+  else { localStorage.removeItem("git-token") }
+
+  if (!global.git) {
+    toast("isomorphic-git 未加载，使用剪贴板", "info")
+    copyGitCommand()
+    return
+  }
+
+  btn.disabled = true
+  btn.textContent = "提交中..."
+
+  try {
+    const fs = createGitFs(fsys.rootDir)
+    const dir = "/"
+
+    const matrix = await global.git.statusMatrix({ fs, dir, filter: (f) => f.startsWith("content/") })
+    let changed = false
+    for (const [filepath, head, workdir] of matrix) {
+      if (head === workdir) continue
+      changed = true
+      if (workdir === 0) { await global.git.remove({ fs, dir, filepath }) }
+      else { await global.git.add({ fs, dir, filepath }) }
+    }
+
+    if (!changed) {
+      toast("没有变更需要提交", "info")
+      btn.disabled = false
+      btn.textContent = "提交并推送"
+      return
+    }
+
+    const name = await global.git.getConfig({ fs, dir, path: "user.name" }) || "junelee220"
+    const email = await global.git.getConfig({ fs, dir, path: "user.email" }) || "junelee220@users.noreply.github.com"
+    await global.git.commit({ fs, dir, message: msg, author: { name, email } })
+
+    if (token) {
+      btn.textContent = "推送中..."
+      if (!global.gitHttp) { throw new Error("HTTP 模块未加载") }
+      await global.git.push({
+        fs, http: global.gitHttp, dir,
+        remote: "origin",
+        corsProxy: proxy,
+        onAuth: () => ({ username: "junelee220", password: token }),
+      })
+      hideModal("modal-git")
+      toast("已提交并推送到 GitHub！", "success")
+    } else {
+      hideModal("modal-git")
+      toast("已提交到本地。填写 Token 可自动推送，或使用剪贴板推送。", "info")
+      copyGitCommand(msg)
+    }
+  } catch (e) {
+    toast("操作失败: " + e.message + "，已复制命令到剪贴板", "error")
+    copyGitCommand(msg)
+  }
+
+  btn.disabled = false
+  btn.textContent = "提交并推送"
+}
+
+function copyGitCommand(msg) {
+  const m = msg || document.getElementById("git-message").value.trim() || "更新内容"
+  const cmd = `git add content/ && git commit -m "${m}" && git push`
+  navigator.clipboard.writeText(cmd).then(() => {
+    toast("命令已复制！请粘贴到终端执行", "success")
+  }).catch(() => {
+    toast("复制失败，请手动输入: " + cmd, "error")
+  })
+}
+
+function clearStoredToken() {
+  localStorage.removeItem("git-token")
+  localStorage.setItem("git-remember", "false")
+  document.getElementById("git-token").value = ""
+  document.getElementById("git-remember").checked = false
+  toast("已清除保存的 Token", "info")
+}
+
+// ── 主题 / 侧栏 ──
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute("data-theme") || "light"
+  const next = cur === "light" ? "dark" : "light"
+  document.documentElement.setAttribute("data-theme", next)
+  localStorage.setItem("editor-theme", next)
+  document.getElementById("btn-theme").textContent = next === "dark" ? "☀️" : "🌙"
+}
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("show") }
+
+// ── 模态框 / Toast ──
+function showModal(id) { document.getElementById(id).classList.add("show") }
+function hideModal(id) { document.getElementById(id).classList.remove("show") }
+function toast(msg, type = "info") {
+  const t = document.getElementById("toast")
+  t.textContent = msg
+  t.className = `toast ${type} show`
+  setTimeout(() => t.classList.remove("show"), 3000)
+}
+
+// ── 工具函数 ──
+function esc(s) {
+  if (!s) return ""
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+}
+function escAttr(s) {
+  if (!s) return ""
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/\\/g, "\\\\")
+}
+
+// ── 全局事件 ──
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+    e.preventDefault()
+    if (!document.getElementById("btn-save").disabled) save()
+  }
+  if (e.key === "Escape") {
+    document.querySelectorAll(".modal-overlay.show").forEach(m => m.classList.remove("show"))
+    hideFileMenu()
+  }
+})
+global.addEventListener("beforeunload", (e) => {
+  if (S.modified) { e.preventDefault(); e.returnValue = "" }
+})
+document.querySelectorAll(".modal-overlay").forEach((m) => {
+  m.addEventListener("click", (e) => { if (e.target === m) m.classList.remove("show") })
+})
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("#context-menu") && !e.target.closest(".file-actions")) hideFileMenu()
+})
+
+Object.assign(global, {
+  S, save, preview, showGitModal, showNewModal, hideModal, showModal,
+  switchTab, toggleFolder, selectFile, renderFileTree, addTag, removeTag,
+  markModified, createFile, updateNewFilename,
+  updateLabelPreview, revertToSaved, toggleTheme, toggleSidebar,
+  toggleSearchMode, onSearchInput, insertMarkdown,
+  showFileMenu, deleteFile, renameFile, confirmDeleteFile, confirmRenameFile,
+  openFolder, gitCommitAndPush, copyGitCommand, clearStoredToken,
+})
+
+init()
+})(window)
+</script>
+</body>
+</html>
